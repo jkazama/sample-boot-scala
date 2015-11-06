@@ -1,0 +1,55 @@
+---
+spring:
+  application.name: sample-boot-scala
+  aop.proxy-target-class: true
+  messages.basename: messages-validation, messages
+  main.show-banner: false 
+
+server.port: 8080
+
+error:
+  whitelabel.enabled: false
+  path: /api/error
+
+security.basic.enabled: false
+
+multipart:
+  maxFileSize: 20MB
+  maxRequestSize: 20MB
+
+management:
+  context-path: /api/management
+  security.enabled: false
+  health:
+    diskspace.enabled: true
+    db.enabled: false
+
+extension:
+  security:
+    auth:
+      enabled: false
+      admin: false
+    cors.enabled: true
+  mail.enabled: false
+  datafixture.enabled: true
+
+---
+spring:
+  profiles: production
+
+management.security.enabled: true
+
+extension:
+  security:
+    auth.enabled: true
+    cors.enabled: false
+  datafixture.enabled: false
+
+---
+spring:
+  profiles: admin
+
+server.port: 8081
+
+extension: 
+  security.auth.admin: true
