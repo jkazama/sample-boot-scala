@@ -20,44 +20,44 @@ class IdLockHandler {
   val lockMap: scala.collection.mutable.Map[Serializable, ReentrantReadWriteLock] =
     scala.collection.mutable.Map()
 
-	/** IDロック上で処理を実行します。 */
-	def call(id: Serializable, lockType: LockType, command: () => Unit) =
-		call[Unit](id, lockType, () => command())
+  /** IDロック上で処理を実行します。 */
+  def call(id: Serializable, lockType: LockType, command: () => Unit) =
+    call[Unit](id, lockType, () => command())
   def call[T](id: Serializable, lockType: LockType, callable: () => T): T = {
-		if (lockType.isWrite) {
-			writeLock(id)
-		} else {
-			readLock(id)
-		}
-		try {
-			callable()
-		} catch {
-		  case e: RuntimeException => throw e
-		  case e: Exception => throw InvocationException("error.Exception", e);
-		} finally {
-			unlock(id);
-		}
-	}
+    if (lockType.isWrite) {
+      writeLock(id)
+    } else {
+      readLock(id)
+    }
+    try {
+      callable()
+    } catch {
+      case e: RuntimeException => throw e
+      case e: Exception => throw InvocationException("error.Exception", e);
+    } finally {
+      unlock(id);
+    }
+  }
     
-	def writeLock(id: Serializable): Unit =
-		Option(id).map(v =>
-			lockMap.synchronized(idLock(v).writeLock().lock()))
+  def writeLock(id: Serializable): Unit =
+    Option(id).map(v =>
+      lockMap.synchronized(idLock(v).writeLock().lock()))
 
-	private def idLock(id: Serializable): ReentrantReadWriteLock =
-		lockMap.getOrElseUpdate(id, new ReentrantReadWriteLock())
+  private def idLock(id: Serializable): ReentrantReadWriteLock =
+    lockMap.getOrElseUpdate(id, new ReentrantReadWriteLock())
 
-	def readLock(id: Serializable): Unit =
-		Option(id).map(v =>
-			lockMap.synchronized(idLock(v).readLock().lock()))
+  def readLock(id: Serializable): Unit =
+    Option(id).map(v =>
+      lockMap.synchronized(idLock(v).readLock().lock()))
 
-	def unlock(id: Serializable): Unit =
-		Option(id).map(v =>
-			lockMap.synchronized(
-			  idLock(v) match {
-			    case lock if lock.isWriteLockedByCurrentThread() => lock.writeLock().unlock()
-			    case lock => lock.readLock().unlock()
-			  }
-			))
+  def unlock(id: Serializable): Unit =
+    Option(id).map(v =>
+      lockMap.synchronized(
+        idLock(v) match {
+          case lock if lock.isWriteLockedByCurrentThread() => lock.writeLock().unlock()
+          case lock => lock.readLock().unlock()
+        }
+      ))
 }
 
 /**

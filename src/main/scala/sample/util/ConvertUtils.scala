@@ -52,16 +52,16 @@ trait ConvertUtils {
     Option(text).map(katakanaToHira.transliterate(_)).getOrElse(null)
   
   /**
-	 * ひらがな/半角カタカナを全角カタカナにします。
-	 * <p>low: 実際の挙動は厳密ではないので単体検証(ConvertUtilsSpec)などで事前に確認して下さい。
-	 */
+   * ひらがな/半角カタカナを全角カタカナにします。
+   * <p>low: 実際の挙動は厳密ではないので単体検証(ConvertUtilsSpec)などで事前に確認して下さい。
+   */
   def hiraganaToZenKana(text: String): String =
     Option(text).map(hiraganaToKana.transliterate(_)).getOrElse(null)
 
   /**
-	 * ひらがな/全角カタカナを半角カタカナにします。
-	 * <p>low: 実際の挙動は厳密ではないので単体検証(ConvertUtilsSpec)などで事前に確認して下さい。
-	 */
+   * ひらがな/全角カタカナを半角カタカナにします。
+   * <p>low: 実際の挙動は厳密ではないので単体検証(ConvertUtilsSpec)などで事前に確認して下さい。
+   */
   def hiraganaToHanKana(text: String): String =
     Option(text).map(v => zenkakuToHan(hiraganaToZenKana(v))).getOrElse(null)
 
@@ -78,22 +78,22 @@ trait ConvertUtils {
   
   /** 文字列を左から指定のバイト数で取得します。 */
   def leftStrict(text: String, lenByte: Int, charset: String): String = {
-		val sb = new StringBuilder()
-		var cnt: Int = 0
-		val scope = new Breaks
-		scope.breakable {
-			for (i <- 0 until text.length) {
-				val v = text.substring(i, i + 1)
-				val blen = v.getBytes(charset).length
-				if (lenByte < cnt + blen) {
-					scope.break()
-				} else {
-					sb.append(v)
-					cnt += blen
-				}
-			}
-		}
-		sb.toString()
-	}
+    val sb = new StringBuilder()
+    var cnt: Int = 0
+    val scope = new Breaks
+    scope.breakable {
+      for (i <- 0 until text.length) {
+        val v = text.substring(i, i + 1)
+        val blen = v.getBytes(charset).length
+        if (lenByte < cnt + blen) {
+          scope.break()
+        } else {
+          sb.append(v)
+          cnt += blen
+        }
+      }
+    }
+    sb.toString()
+  }
 }
 object ConvertUtils extends ConvertUtils

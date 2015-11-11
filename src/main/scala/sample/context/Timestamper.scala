@@ -18,16 +18,16 @@ class Timestamper(clock: Clock) {
   var setting: AppSettingHandler = _
 
   /** 営業日を返します。 */
-  def day(): LocalDate = Option(setting) match {
+  def day: LocalDate = Option(setting) match {
     case Some(sh) => DateUtils.day(sh.setting(Timestamper.KEY_DAY).str())
     case None => LocalDate.now(clock)
   }
 
   /** 日時を返します。 */
-  def date(): LocalDateTime = LocalDateTime.now(clock)
+  def date: LocalDateTime = LocalDateTime.now(clock)
 
   /** 営業日/日時を返します。 */
-  def tp(): TimePoint = TimePoint(day, date)
+  def tp: TimePoint = TimePoint(day, date)
   /**
    * 営業日を指定日へ進めます。
    * <p>AppSettingHandlerを設定時のみ有効です。

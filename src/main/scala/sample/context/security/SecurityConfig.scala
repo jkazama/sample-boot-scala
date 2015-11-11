@@ -22,15 +22,15 @@ import org.springframework.web.filter.CorsFilter
 @Order(org.springframework.boot.autoconfigure.security.SecurityProperties.ACCESS_OVERRIDE_ORDER)
 class SecurityConfig {
   
-	/** パスワード用のハッシュ(BCrypt)エンコーダー。 */
+  /** パスワード用のハッシュ(BCrypt)エンコーダー。 */
   //low: きちんとやるのであれば、strengthやSecureRandom使うなど外部切り出し含めて検討してください
-	@Bean
-	def passwordEncoder(): PasswordEncoder = new BCryptPasswordEncoder();
-	
-	/** CORS全体適用 */
-	@Bean
-	@ConditionalOnProperty(prefix = "extension.security.cors", name = Array("enabled"), matchIfMissing = false)
-	def corsFilter(props: SecurityProperties): CorsFilter = {
+  @Bean
+  def passwordEncoder(): PasswordEncoder = new BCryptPasswordEncoder();
+  
+  /** CORS全体適用 */
+  @Bean
+  @ConditionalOnProperty(prefix = "extension.security.cors", name = Array("enabled"), matchIfMissing = false)
+  def corsFilter(props: SecurityProperties): CorsFilter = {
     val source = new UrlBasedCorsConfigurationSource()
     val config = new CorsConfiguration()
     config.setAllowCredentials(props.cors.allowCredentials);
@@ -40,17 +40,17 @@ class SecurityConfig {
     config.setMaxAge(props.cors.maxAge);
     source.registerCorsConfiguration(props.cors.path, config);
     new CorsFilter(source);
-	}
+  }
 }
 
 /** セキュリティ関連の設定情報を表現します。 */
 @BeanInfo
 @ConfigurationProperties(prefix = "extension.security")
 class SecurityProperties {
-	/** Spring Security依存の認証/認可設定情報 */
-	var auth: SecurityAuthProperties = new SecurityAuthProperties()
-	/** CORS設定情報 */
-	var cors: SecurityCorsProperties = new SecurityCorsProperties()
+  /** Spring Security依存の認証/認可設定情報 */
+  var auth: SecurityAuthProperties = new SecurityAuthProperties()
+  /** CORS設定情報 */
+  var cors: SecurityCorsProperties = new SecurityCorsProperties()
 }
 
 /** CORS設定情報を表現します。 */

@@ -4,6 +4,7 @@ import sample.ValidationException
 import scalikejdbc._
 import sample.context.orm.SkinnyORMMapper
 import sample.context.Entity
+import sample.ErrorKeys
 
 /**
  * サービス事業者の決済金融機関を表現します。
@@ -27,7 +28,7 @@ object SelfFiAccount extends SkinnyORMMapper[SelfFiAccount] {
   def load(category: String, currency: String)(implicit s: DBSession): SelfFiAccount =
     SelfFiAccount.withAlias { m =>
       findBy(sqls.eq(m.category, category).and(sqls.eq(m.currency, currency))).getOrElse(
-        throw ValidationException("error.Entity.load"))
+        throw ValidationException(ErrorKeys.EntityNotFound))
     }
 }
 

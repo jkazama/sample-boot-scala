@@ -59,115 +59,115 @@ import org.springframework.security.web.authentication.logout.LogoutFilter
 @Order(org.springframework.boot.autoconfigure.security.SecurityProperties.ACCESS_OVERRIDE_ORDER)
 class SecurityAuthConfig extends WebSecurityConfigurerAdapter {
 
-	/** Spring Boot のサーバ情報 */
-	@Autowired
-	var serverProps: ServerProperties = _
-	/** 拡張セキュリティ情報 */
-	@Autowired
-	var props: SecurityProperties = _
-	/** 認証/認可利用者サービス */
-	@Autowired
-	var actorFinder: SecurityActorFinder = _ 
-	/** カスタム認証プロバイダ */
-	@Autowired
-	var securityProvider: SecurityProvider = _
-	/** カスタムエントリポイント(例外対応) */
-	@Autowired
-	var entryPoint: SecurityEntryPoint = _
-	/** ログイン/ログアウト時の拡張ハンドラ */
-	@Autowired
-	var loginHandler: LoginHandler = _
-	/** ThreadLocalスコープの利用者セッション */
-	@Autowired
-	var actorSession: ActorSession = _
-	/** CORS利用時のフィルタ */
-	@Autowired(required = false)
-	var corsFilter: CorsFilter = _
-	/** 認証配下に置くServletFilter */
-	@Autowired(required = false)
-	var filters: SecurityFilters = _
+  /** Spring Boot のサーバ情報 */
+  @Autowired
+  var serverProps: ServerProperties = _
+  /** 拡張セキュリティ情報 */
+  @Autowired
+  var props: SecurityProperties = _
+  /** 認証/認可利用者サービス */
+  @Autowired
+  var actorFinder: SecurityActorFinder = _ 
+  /** カスタム認証プロバイダ */
+  @Autowired
+  var securityProvider: SecurityProvider = _
+  /** カスタムエントリポイント(例外対応) */
+  @Autowired
+  var entryPoint: SecurityEntryPoint = _
+  /** ログイン/ログアウト時の拡張ハンドラ */
+  @Autowired
+  var loginHandler: LoginHandler = _
+  /** ThreadLocalスコープの利用者セッション */
+  @Autowired
+  var actorSession: ActorSession = _
+  /** CORS利用時のフィルタ */
+  @Autowired(required = false)
+  var corsFilter: CorsFilter = _
+  /** 認証配下に置くServletFilter */
+  @Autowired(required = false)
+  var filters: SecurityFilters = _
   
-	override def configure(auth: AuthenticationManagerBuilder) =
-		auth.eraseCredentials(true).authenticationProvider(securityProvider)
-	
-	@Bean
-	@ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
-	override def authenticationManagerBean(): AuthenticationManager =
-	  super.authenticationManagerBean()
-	
+  override def configure(auth: AuthenticationManagerBuilder) =
+    auth.eraseCredentials(true).authenticationProvider(securityProvider)
+  
+  @Bean
+  @ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
+  override def authenticationManagerBean(): AuthenticationManager =
+    super.authenticationManagerBean()
+  
   override def configure(web: WebSecurity) =
-		web.ignoring().antMatchers(serverProps.getPathsArray(props.auth.ignorePath): _*)
-	
-	override def configure(http: HttpSecurity) {
-		// Target URL
-		http
-			.authorizeRequests()
-			.antMatchers(props.auth.excludesPath: _*).permitAll()
-		http
-			.csrf().disable()
-			.authorizeRequests()
-				.antMatchers(props.auth.pathAdmin: _*).hasRole("ADMIN")
-				.antMatchers(props.auth.path: _*).hasRole("USER")
-		// common
-		http
-			.exceptionHandling().authenticationEntryPoint(entryPoint)
-		http
-			.sessionManagement()
-			.maximumSessions(props.auth.maximumSessions)
-			.and()
-			.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-		http
-			.addFilterAfter(new ActorSessionFilter(actorSession), classOf[UsernamePasswordAuthenticationFilter])
-		if (corsFilter != null)
-			http.addFilterBefore(corsFilter, classOf[LogoutFilter])
-		if (filters != null)
-			filters.filters().foreach(http.addFilterAfter(_, classOf[ActorSessionFilter]))
+    web.ignoring().antMatchers(serverProps.getPathsArray(props.auth.ignorePath): _*)
+  
+  override def configure(http: HttpSecurity) {
+    // Target URL
+    http
+      .authorizeRequests()
+      .antMatchers(props.auth.excludesPath: _*).permitAll()
+    http
+      .csrf().disable()
+      .authorizeRequests()
+        .antMatchers(props.auth.pathAdmin: _*).hasRole("ADMIN")
+        .antMatchers(props.auth.path: _*).hasRole("USER")
+    // common
+    http
+      .exceptionHandling().authenticationEntryPoint(entryPoint)
+    http
+      .sessionManagement()
+      .maximumSessions(props.auth.maximumSessions)
+      .and()
+      .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+    http
+      .addFilterAfter(new ActorSessionFilter(actorSession), classOf[UsernamePasswordAuthenticationFilter])
+    if (corsFilter != null)
+      http.addFilterBefore(corsFilter, classOf[LogoutFilter])
+    if (filters != null)
+      filters.filters().foreach(http.addFilterAfter(_, classOf[ActorSessionFilter]))
 
-		// login/logout
-		http
-			.formLogin().loginPage(props.auth.loginPath)
-			.usernameParameter(props.auth.loginKey).passwordParameter(props.auth.passwordKey)
-			.successHandler(loginHandler).failureHandler(loginHandler)
-			.permitAll()
-			.and()
-			.logout().logoutUrl(props.auth.logoutPath)
-			.logoutSuccessHandler(loginHandler)
-			.permitAll();
-	}
+    // login/logout
+    http
+      .formLogin().loginPage(props.auth.loginPath)
+      .usernameParameter(props.auth.loginKey).passwordParameter(props.auth.passwordKey)
+      .successHandler(loginHandler).failureHandler(loginHandler)
+      .permitAll()
+      .and()
+      .logout().logoutUrl(props.auth.logoutPath)
+      .logoutSuccessHandler(loginHandler)
+      .permitAll();
+  }
 }
 
 /** Spring Securityに対する拡張設定情報。(ScurityConfig#SecurityPropertiesによって管理されています) */
 @BeanInfo
 class SecurityAuthProperties {
-	/** リクエスト時のログインIDを取得するキー */
-	var loginKey = "loginId"
-	/** リクエスト時のパスワードを取得するキー */
-	var passwordKey = "password"
-	/** 認証対象パス */
-	var path = Array("/api/**")
-	/** 認証対象パス(管理者向け) */
-	var pathAdmin = Array("/api/admin/**")
-	/** 認証除外パス(認証対象からの除外) */
-	var excludesPath = Array("/api/system/job/**")
-	/** 認証無視パス(フィルタ未適用の認証未考慮、静的リソース等) */
-	var ignorePath = Array("/css/**", "/js/**", "/img/**", "/**/favicon.ico")
-	/** ログインAPIパス */
-	var loginPath = "/api/login"
-	/** ログアウトAPIパス */
-	var logoutPath = "/api/logout"
-	/** 一人が同時利用可能な最大セッション数 */
-	var maximumSessions: Int = 2
-	/**
-	 * 社員向けモードの時はtrue。
-	 * <p>ログインパスは同じですが、ログイン処理の取り扱いが切り替わります。
-	 * <ul>
-	 * <li>true: SecurityUserService
-	 * <li>false: SecurityAdminService
-	 * </ul> 
-	 */
-	var admin = false;
-	/** 認証が有効な時はtrue */
-	var enabled = true
+  /** リクエスト時のログインIDを取得するキー */
+  var loginKey = "loginId"
+  /** リクエスト時のパスワードを取得するキー */
+  var passwordKey = "password"
+  /** 認証対象パス */
+  var path = Array("/api/**")
+  /** 認証対象パス(管理者向け) */
+  var pathAdmin = Array("/api/admin/**")
+  /** 認証除外パス(認証対象からの除外) */
+  var excludesPath = Array("/api/system/job/**")
+  /** 認証無視パス(フィルタ未適用の認証未考慮、静的リソース等) */
+  var ignorePath = Array("/css/**", "/js/**", "/img/**", "/**/favicon.ico")
+  /** ログインAPIパス */
+  var loginPath = "/api/login"
+  /** ログアウトAPIパス */
+  var logoutPath = "/api/logout"
+  /** 一人が同時利用可能な最大セッション数 */
+  var maximumSessions: Int = 2
+  /**
+   * 社員向けモードの時はtrue。
+   * <p>ログインパスは同じですが、ログイン処理の取り扱いが切り替わります。
+   * <ul>
+   * <li>true: SecurityUserService
+   * <li>false: SecurityAdminService
+   * </ul> 
+   */
+  var admin = false;
+  /** 認証が有効な時はtrue */
+  var enabled = true
 }
 
 /**
@@ -177,30 +177,30 @@ class SecurityAuthProperties {
 @Component
 @ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class SecurityProvider extends AuthenticationProvider {
-	@Autowired
-	private var actorFinder: SecurityActorFinder = _
-	@Autowired
-	@Lazy
-	private var encoder: PasswordEncoder = _
-	override def authenticate(authentication: Authentication):Authentication = {
+  @Autowired
+  private var actorFinder: SecurityActorFinder = _
+  @Autowired
+  @Lazy
+  private var encoder: PasswordEncoder = _
+  override def authenticate(authentication: Authentication):Authentication = {
     if (authentication.getPrincipal() == null ||
-    		authentication.getCredentials() == null) {
+        authentication.getCredentials() == null) {
         throw new BadCredentialsException("ログイン認証に失敗しました");
     }
     val service = actorFinder.detailsService
     val details =
-    		service.loadUserByUsername(authentication.getPrincipal().toString())
+        service.loadUserByUsername(authentication.getPrincipal().toString())
     val presentedPassword = authentication.getCredentials().toString()
     if (!encoder.matches(presentedPassword, details.getPassword())) {
-    	throw new BadCredentialsException("ログイン認証に失敗しました");
+      throw new BadCredentialsException("ログイン認証に失敗しました");
     }
-    val ret =	new UsernamePasswordAuthenticationToken(
-    		authentication.getName(), "", details.getAuthorities());
-		ret.setDetails(details);
-		return ret;
-	}
-	override def supports(authentication: Class[_]) =
-		classOf[UsernamePasswordAuthenticationToken].isAssignableFrom(authentication)
+    val ret =  new UsernamePasswordAuthenticationToken(
+        authentication.getName(), "", details.getAuthorities());
+    ret.setDetails(details);
+    return ret;
+  }
+  override def supports(authentication: Class[_]) =
+    classOf[UsernamePasswordAuthenticationToken].isAssignableFrom(authentication)
 }
 
 /**
@@ -210,38 +210,38 @@ class SecurityProvider extends AuthenticationProvider {
 @Component
 @ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class SecurityEntryPoint extends AuthenticationEntryPoint {
-	@Autowired
-	var msg: MessageSource = _
-	override def commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
-		val message =
-		  if (authException.isInstanceOf[InsufficientAuthenticationException])
-		    msg.getMessage(ErrorKeys.AccessDenied, Array(), Locale.getDefault())
-		  else
-		    msg.getMessage(ErrorKeys.Authentication, Array(), Locale.getDefault())
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
-	}
+  @Autowired
+  var msg: MessageSource = _
+  override def commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
+    val message =
+      if (authException.isInstanceOf[InsufficientAuthenticationException])
+        msg.getMessage(ErrorKeys.AccessDenied, Array(), Locale.getDefault())
+      else
+        msg.getMessage(ErrorKeys.Authentication, Array(), Locale.getDefault())
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+  }
 }
-	
+  
 /**
  * SpringSecurityの認証情報(Authentication)とActorSessionを紐付けるServletFilter。
  * <p>dummyLoginが有効な時は常にSecurityContextHolderへAuthenticationを紐付けます。 
  */
 case class ActorSessionFilter(actorSession: ActorSession) extends GenericFilterBean {
-	override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-		val authOpt = SecurityActorFinder.authentication
-		if (authOpt.isDefined && authOpt.map(_.getDetails().isInstanceOf[ActorDetails]).getOrElse(false)) {
-			val details = authOpt.get.getDetails().asInstanceOf[ActorDetails]
-			actorSession.bind(details.actor)
-			try {
-				chain.doFilter(request, response)
-			} finally {
-				actorSession.unbind()
-			}
-		} else {
-			actorSession.unbind()
-			chain.doFilter(request, response)	
-		}
-	}
+  override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+    val authOpt = SecurityActorFinder.authentication
+    if (authOpt.isDefined && authOpt.map(_.getDetails().isInstanceOf[ActorDetails]).getOrElse(false)) {
+      val details = authOpt.get.getDetails().asInstanceOf[ActorDetails]
+      actorSession.bind(details.actor)
+      try {
+        chain.doFilter(request, response)
+      } finally {
+        actorSession.unbind()
+      }
+    } else {
+      actorSession.unbind()
+      chain.doFilter(request, response)  
+    }
+  }
 }
 
 /**
@@ -250,32 +250,32 @@ case class ActorSessionFilter(actorSession: ActorSession) extends GenericFilterB
 @Component
 @ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class LoginHandler extends AuthenticationSuccessHandler with AuthenticationFailureHandler with LogoutSuccessHandler {
-	@Autowired
-	var props: SecurityProperties = _
+  @Autowired
+  var props: SecurityProperties = _
 
-	/** ログイン成功処理 */
-	override def onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
-		Option(authentication.getDetails().asInstanceOf[ActorDetails]).map(detail =>
-		  detail.bindRequestInfo(request))
-		if (response.isCommitted()) return
-		writeReponseEmpty(response, HttpServletResponse.SC_OK);
-	}
+  /** ログイン成功処理 */
+  override def onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+    Option(authentication.getDetails().asInstanceOf[ActorDetails]).map(detail =>
+      detail.bindRequestInfo(request))
+    if (response.isCommitted()) return
+    writeReponseEmpty(response, HttpServletResponse.SC_OK);
+  }
 
-	/** ログイン失敗処理 */
-	override def onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
-		if (response.isCommitted()) return
-		writeReponseEmpty(response, HttpServletResponse.SC_BAD_REQUEST)
-	}
+  /** ログイン失敗処理 */
+  override def onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
+    if (response.isCommitted()) return
+    writeReponseEmpty(response, HttpServletResponse.SC_BAD_REQUEST)
+  }
 
-	/** ログアウト成功処理 */
-	override def onLogoutSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
-		if (response.isCommitted()) return;
-		writeReponseEmpty(response, HttpServletResponse.SC_OK);
-	}
-	
-	private def writeReponseEmpty(response: HttpServletResponse, status: Int) {
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setStatus(status);
-		response.getWriter().write("{}");			
-	}		
+  /** ログアウト成功処理 */
+  override def onLogoutSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+    if (response.isCommitted()) return;
+    writeReponseEmpty(response, HttpServletResponse.SC_OK);
+  }
+  
+  private def writeReponseEmpty(response: HttpServletResponse, status: Int) {
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setStatus(status);
+    response.getWriter().write("{}");      
+  }    
 }

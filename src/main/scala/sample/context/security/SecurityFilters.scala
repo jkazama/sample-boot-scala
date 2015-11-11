@@ -8,11 +8,11 @@ import javax.servlet.Filter
  */
 trait SecurityFilters {
   
-	/**
-	 * Spring SecurityへFilter登録するServletFilter一覧を返します。
-	 * <p>登録したFilterはUsernamePasswordAuthenticationFilter/ActorSessionFilterの後に
-	 * 実行されるのでActorSessionからログイン利用者の情報を取ることが可能です。
-	 */
-	def filters(): Seq[Filter]
+  /**
+   * Spring SecurityへFilter登録するServletFilter一覧を返します。
+   * <p>登録したFilterはUsernamePasswordAuthenticationFilter/ActorSessionFilterの後に
+   * 実行されるのでActorSessionからログイン利用者の情報を取ることが可能です。
+   */
+  def filters(): Seq[Filter]
   
 }

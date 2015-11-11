@@ -28,73 +28,73 @@ class RestErrorAdvice {
   @Autowired
   var msg: MessageSource = _
   @Autowired
-	var session: ActorSession = _
+  var session: ActorSession = _
 
-	/** Servlet例外 */
+  /** Servlet例外 */
   @ExceptionHandler(Array(classOf[ServletRequestBindingException]))
   def handleServletRequestBinding(e: ServletRequestBindingException): ResponseEntity[Map[String, Array[String]]] =
     handleException(e, ErrorHolder(msg, locale, "error.ServletRequestBinding"))
-  private def locale: Locale = session.actor().locale
+  private def locale: Locale = session.actor.locale
   private def handleException(e: Exception, holder: ErrorHolder, status: HttpStatus = HttpStatus.BAD_REQUEST): ResponseEntity[Map[String, Array[String]]] = {
     log.warn(e.getMessage())
     holder.result(HttpStatus.BAD_REQUEST)
   }
   
-	/** メディアタイプのミスマッチ例外 */
-	@ExceptionHandler(Array(classOf[HttpMediaTypeNotAcceptableException]))
-	def handleHttpMediaTypeNotAcceptable(e: HttpMediaTypeNotAcceptableException): ResponseEntity[Map[String, Array[String]]] =
+  /** メディアタイプのミスマッチ例外 */
+  @ExceptionHandler(Array(classOf[HttpMediaTypeNotAcceptableException]))
+  def handleHttpMediaTypeNotAcceptable(e: HttpMediaTypeNotAcceptableException): ResponseEntity[Map[String, Array[String]]] =
     handleException(e, ErrorHolder(msg, locale, "error.HttpMediaTypeNotAcceptable"))
     
-	/** 権限例外 */
-	@ExceptionHandler(Array(classOf[AccessDeniedException]))
-	def handleAccessDeniedException(e: AccessDeniedException): ResponseEntity[Map[String, Array[String]]] =
-	  handleException(e, ErrorHolder(msg, locale, ErrorKeys.AccessDenied), HttpStatus.UNAUTHORIZED)
+  /** 権限例外 */
+  @ExceptionHandler(Array(classOf[AccessDeniedException]))
+  def handleAccessDeniedException(e: AccessDeniedException): ResponseEntity[Map[String, Array[String]]] =
+    handleException(e, ErrorHolder(msg, locale, ErrorKeys.AccessDenied), HttpStatus.UNAUTHORIZED)
 
-	/** BeanValidation(JSR303)の制約例外 */
-	@ExceptionHandler(Array(classOf[ConstraintViolationException]))
-	def handleConstraintViolation(e: ConstraintViolationException): ResponseEntity[Map[String, Array[String]]] =
-	  handleException(e, ErrorHolder(msg, locale, exceptionToWarns(e)))
-	private def exceptionToWarns(e: ConstraintViolationException): Seq[Warn] =
-	  e.getConstraintViolations().asScala.map(v =>
-	    Warn(v.getPropertyPath.toString(), v.getMessage)).toIndexedSeq
+  /** BeanValidation(JSR303)の制約例外 */
+  @ExceptionHandler(Array(classOf[ConstraintViolationException]))
+  def handleConstraintViolation(e: ConstraintViolationException): ResponseEntity[Map[String, Array[String]]] =
+    handleException(e, ErrorHolder(msg, locale, exceptionToWarns(e)))
+  private def exceptionToWarns(e: ConstraintViolationException): Seq[Warn] =
+    e.getConstraintViolations().asScala.map(v =>
+      Warn(v.getPropertyPath.toString(), v.getMessage)).toIndexedSeq
 
-	/** Controllerへのリクエスト紐付け例外 */
-	@ExceptionHandler(Array(classOf[BindException]))
-	def handleBind(e: BindException): ResponseEntity[Map[String, Array[String]]] =
-	  handleException(e, ErrorHolder(msg, locale, exceptionToWarns(e)))
-	private def exceptionToWarns(e: BindException): Seq[Warn] =
-	  e.getAllErrors.asScala.map(oe =>
-	    Warn(field(oe), message(oe), args(oe)))
-	private def field(e: ObjectError): String =
-	  if (e.getCodes.length == 1) parseField(e.getCodes()(0))
-	  else if (1 < e.getCodes().length) parseField(e.getCodes()(1)) // low: プリフィックスは冗長なので外してます
-	  else ""
-	private def parseField(field: String): String =
-	  Option(field).map(v => v.substring(v.indexOf('.') + 1)).getOrElse("")
-	private def message(e: ObjectError): String =
-	  if (0 <= e.getCodes()(0).indexOf("typeMismatch")) e.getCodes()(2) else e.getDefaultMessage()
-	private def args(e: ObjectError): Array[AnyRef] =
-	  e.getArguments().filter(v => !v.isInstanceOf[MessageSourceResolvable])
+  /** Controllerへのリクエスト紐付け例外 */
+  @ExceptionHandler(Array(classOf[BindException]))
+  def handleBind(e: BindException): ResponseEntity[Map[String, Array[String]]] =
+    handleException(e, ErrorHolder(msg, locale, exceptionToWarns(e)))
+  private def exceptionToWarns(e: BindException): Seq[Warn] =
+    e.getAllErrors.asScala.map(oe =>
+      Warn(field(oe), message(oe), args(oe)))
+  private def field(e: ObjectError): String =
+    if (e.getCodes.length == 1) parseField(e.getCodes()(0))
+    else if (1 < e.getCodes().length) parseField(e.getCodes()(1)) // low: プリフィックスは冗長なので外してます
+    else ""
+  private def parseField(field: String): String =
+    Option(field).map(v => v.substring(v.indexOf('.') + 1)).getOrElse("")
+  private def message(e: ObjectError): String =
+    if (0 <= e.getCodes()(0).indexOf("typeMismatch")) e.getCodes()(2) else e.getDefaultMessage()
+  private def args(e: ObjectError): Array[AnyRef] =
+    e.getArguments().filter(v => !v.isInstanceOf[MessageSourceResolvable])
 
-	/** アプリケーション例外 */
-	@ExceptionHandler(Array(classOf[ValidationException]))
-	def handleValidation(e: ValidationException): ResponseEntity[Map[String, Array[String]]] =
-	  handleException(e, ErrorHolder(msg, locale, e))
+  /** アプリケーション例外 */
+  @ExceptionHandler(Array(classOf[ValidationException]))
+  def handleValidation(e: ValidationException): ResponseEntity[Map[String, Array[String]]] =
+    handleException(e, ErrorHolder(msg, locale, e))
 
-	/** IO例外（Tomcatの Broken pipe はサーバー側の責務ではないので除外しています) */
-	@ExceptionHandler(Array(classOf[IOException]))
-	def handleIOException(e: IOException): ResponseEntity[Map[String, Array[String]]] =
-	  if (e.getMessage() != null && e.getMessage().contains("Broken pipe")) {
-	    log.info("クライアント事由で処理が打ち切られました。")
-	    new ResponseEntity(HttpStatus.OK)
-	  } else {
-	    handleException(e)
-	  }
-	
-	/** 汎用例外 */
-	@ExceptionHandler(Array(classOf[Exception]))
-	def handleException(e: Exception): ResponseEntity[Map[String, Array[String]]] =
-	  handleException(e, ErrorHolder(msg, locale, ErrorKeys.Exception), HttpStatus.INTERNAL_SERVER_ERROR)
+  /** IO例外（Tomcatの Broken pipe はサーバー側の責務ではないので除外しています) */
+  @ExceptionHandler(Array(classOf[IOException]))
+  def handleIOException(e: IOException): ResponseEntity[Map[String, Array[String]]] =
+    if (e.getMessage() != null && e.getMessage().contains("Broken pipe")) {
+      log.info("クライアント事由で処理が打ち切られました。")
+      new ResponseEntity(HttpStatus.OK)
+    } else {
+      handleException(e)
+    }
+  
+  /** 汎用例外 */
+  @ExceptionHandler(Array(classOf[Exception]))
+  def handleException(e: Exception): ResponseEntity[Map[String, Array[String]]] =
+    handleException(e, ErrorHolder(msg, locale, ErrorKeys.Exception), HttpStatus.INTERNAL_SERVER_ERROR)
 
 }
 
@@ -114,12 +114,12 @@ case class ErrorHolder(errors: Map[Option[String], Seq[Warn]], msg: MessageSourc
   def error(field: String, msgKey: String, msgArgs: Option[Array[AnyRef]]): ErrorHolder =
     copy(errors = errors + (Some(field) -> (errors.getOrElse(Some(field), Seq()) :+
         Warn(msgKey, msgArgs.getOrElse(Array())))))
-	/** 保有する例外情報をResponseEntityへ変換します。 */
+  /** 保有する例外情報をResponseEntityへ変換します。 */
   def result(status: HttpStatus): ResponseEntity[Map[String, Array[String]]] =
-			new ResponseEntity[Map[String, Array[String]]](
-				errors.map(v => v._1.getOrElse("") -> v._2.map(warn =>
-				  msg.getMessage(warn.message, warn.messageArgs.getOrElse(Array()), warn.message, locale)).toArray),
-				status);
+      new ResponseEntity[Map[String, Array[String]]](
+        errors.map(v => v._1.getOrElse("") -> v._2.map(warn =>
+          msg.getMessage(warn.message, warn.messageArgs.getOrElse(Array()), warn.message, locale)).toArray),
+        status);
 }
 object ErrorHolder {
   def apply(msg: MessageSource, locale: Locale): ErrorHolder = ErrorHolder(Map[Option[String], Seq[Warn]](), msg, locale)

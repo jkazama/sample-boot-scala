@@ -26,17 +26,17 @@ object Actor {
   def apply(id: String, name: String, roleType: ActorRoleType): Actor = Actor(id, name, roleType, Locale.getDefault(), None, None)
   
   /** 匿名利用者定数 */
-	val Anonymous: Actor = Actor("unknown", ActorRoleType.ANONYMOUS)
-	/** システム利用者定数 */
-	val System: Actor = Actor("system", ActorRoleType.SYSTEM);
+  val Anonymous: Actor = Actor("unknown", ActorRoleType.ANONYMOUS)
+  /** システム利用者定数 */
+  val System: Actor = Actor("system", ActorRoleType.SYSTEM);
 }
 
 /** 利用者の役割を表現します。 */
 sealed trait ActorRoleType extends EnumSealed {
   @JsonValue def value: String = this.toString()
-  def isAnonymous(): Boolean = this == ActorRoleType.ANONYMOUS
-  def isSystem(): Boolean = this == ActorRoleType.SYSTEM
-  def notSystem(): Boolean = !isSystem()
+  def anonymous: Boolean = this == ActorRoleType.ANONYMOUS
+  def system: Boolean = this == ActorRoleType.SYSTEM
+  def notSystem: Boolean = !system
 }
 object ActorRoleType extends Enums[ActorRoleType] {
   /** 匿名利用者(ID等の特定情報を持たない利用者) */

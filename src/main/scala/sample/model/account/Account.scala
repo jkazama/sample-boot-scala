@@ -7,7 +7,8 @@ import scalikejdbc._
 import sample.ErrorKeys
 import com.fasterxml.jackson.annotation.JsonValue
 import sample.context.orm.SkinnyORMMapperWithIdStr
-
+import sample.context.actor.{ Actor, ActorRoleType }
+import org.springframework.security.crypto.password.PasswordEncoder
 
 /**
  * 口座を表現します。
@@ -21,7 +22,13 @@ case class Account(
   /** メールアドレス */
   mail: String,
   /** 口座状態 */
-  statusType: AccountStatusType) extends Entity
+  statusType: AccountStatusType) extends Entity {
+
+  def actor: Actor = Actor(id, name, ActorRoleType.USER)
+
+  /** 口座に紐付くログイン情報を取得します。 */
+  def loadLogin(implicit s: DBSession): Login = Login.load(id)
+}
 
 object Account extends AccountMapper {
 
@@ -31,6 +38,20 @@ object Account extends AccountMapper {
     case Some(acc) => acc
     case None => throw ValidationException(ErrorKeys.EntityNotFound)
   }
+  
+  /** 
+   * 口座の登録を行います。
+   * <p>ログイン情報も同時に登録されます。
+   */
+  def register(encoder: PasswordEncoder, p: RegAccount)(implicit s: DBSession): String = {
+    Login.register(encoder, p)
+    createWithAttributes('id -> p.id, 'name -> p.name, 'mail -> p.mail,
+      'statusType -> AccountStatusType.NORMAL.value)
+  }
+
+  /** 口座を変更します。 */
+  def change(id: String, p: ChgAccount)(implicit s: DBSession): Unit =
+    updateById(id).withAttributes('name -> p.name, 'mail -> p.mail)
 }
 
 trait AccountMapper extends SkinnyORMMapperWithIdStr[Account] {
@@ -55,3 +76,9 @@ object AccountStatusType extends Enums[AccountStatusType] {
   
   override def values = List(NORMAL, WITHDRAWAL)
 }
+
+/** 登録パラメタ */
+case class RegAccount(id: String, name: String, mail: String, plainPassword: String)
+
+/** 変更パラメタ */
+case class ChgAccount(name: String, mail: String)

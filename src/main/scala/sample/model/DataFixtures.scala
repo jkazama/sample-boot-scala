@@ -29,7 +29,7 @@ object DataFixtures extends DdlExecutor {
   /** 口座の簡易生成 */
   def saveAcc(id: String, statusType: AccountStatusType)(implicit session: DBSession): Account =
     Account.findById(Account.createWithAttributes(
-      'id -> id, 'name -> id, 'mail -> "hoge@example.com", 'statusType -> statusType)).get
+      'id -> id, 'name -> id, 'mail -> "hoge@example.com", 'statusType -> statusType.value)).get
 
   /** 口座に紐付く金融機関口座の簡易生成 */
   def saveFiAcc(accountId: String, category: String, currency: String)(implicit session: DBSession): FiAccount =
@@ -59,10 +59,10 @@ trait DdlExecutor {
       drop table staff_authority if exists;
       create table account (id varchar(32) not null, mail varchar(256) not null, name varchar(30) not null, status_type varchar(255) not null, primary key (id));
       create table cash_balance (id bigint auto_increment, account_id varchar(32) not null, amount decimal(20,4) not null, base_day date not null, currency varchar(3) not null, update_date timestamp not null, primary key (id));
-      create table cashflow (id bigint auto_increment, account_id varchar(32) not null, amount decimal(20,4) not null, cashflow_type varchar(255) not null, create_date timestamp not null, create_id varchar(32) not null, currency varchar(3) not null, event_date timestamp not null, event_day date not null, remark varchar(30) not null, status_type varchar(255) not null, update_date timestamp not null, update_id varchar(32) not null, value_day date not null, primary key (id));
-      create table cash_in_out (id bigint auto_increment, abs_amount decimal(20,4) not null, account_id varchar(32) not null, cashflow_id bigint, create_date timestamp not null, create_id varchar(32) not null, currency varchar(3) not null, event_day date not null, request_date timestamp not null, request_day date not null, self_fi_account_id varchar(32) not null, self_fi_code varchar(32) not null, status_type varchar(255) not null, target_fi_account_id varchar(32) not null, target_fi_code varchar(32) not null, update_date timestamp not null, update_id varchar(32) not null, value_day date not null, withdrawal boolean not null, primary key (id));
+      create table cashflow (id bigint auto_increment, account_id varchar(32) not null, amount decimal(20,4) not null, cashflow_type varchar(255) not null, currency varchar(3) not null, event_date timestamp not null, event_day date not null, remark varchar(30) not null, status_type varchar(255) not null, value_day date not null, primary key (id));
+      create table cash_in_out (id bigint auto_increment, abs_amount decimal(20,4) not null, account_id varchar(32) not null, cashflow_id bigint, currency varchar(3) not null, event_day date not null, request_date timestamp not null, request_day date not null, self_fi_account_id varchar(32) not null, self_fi_code varchar(32) not null, status_type varchar(255) not null, target_fi_account_id varchar(32) not null, target_fi_code varchar(32) not null, value_day date not null, withdrawal boolean not null, primary key (id));
       create table fi_account (id bigint auto_increment, account_id varchar(32) not null, category varchar(30) not null, currency varchar(3) not null, fi_account_id varchar(32) not null, fi_code varchar(32) not null, primary key (id));
-      create table holiday (id bigint auto_increment, category varchar(30) not null, create_date timestamp not null, create_id varchar(32) not null, day date not null, name varchar(40) not null, update_date timestamp not null, update_id varchar(32) not null, primary key (id));
+      create table holiday (id bigint auto_increment, category varchar(30) not null, day date not null, name varchar(40) not null, primary key (id));
       create table login (id varchar(32) not null, login_id varchar(255), password varchar(256) not null, primary key (id));
       create table self_fi_account (id bigint auto_increment, category varchar(30) not null, currency varchar(3) not null, fi_account_id varchar(32) not null, fi_code varchar(32) not null, primary key (id));
       create table staff (id varchar(32) not null, name varchar(30) not null, password varchar(256) not null, primary key (id));

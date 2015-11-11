@@ -34,10 +34,10 @@ class ResourceBundleHandler {
     )
   private def keyname(basename: String, locale: Locale): String = s"${basename}_${locale.toLanguageTag()}"
   
-	/**
-	 * 指定されたメッセージソースのラベルキー、値のMapを返します。
-	 * <p>basenameに拡張子(.properties)を含める必要はありません。
-	 */
+  /**
+   * 指定されたメッセージソースのラベルキー、値のMapを返します。
+   * <p>basenameに拡張子(.properties)を含める必要はありません。
+   */
   def labels(basename: String): Map[String, String] =
     labels(basename, Locale.getDefault)
   def labels(basename: String, locale: Locale): Map[String, String] = {

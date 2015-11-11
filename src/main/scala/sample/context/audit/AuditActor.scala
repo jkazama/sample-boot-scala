@@ -41,9 +41,9 @@ case class AuditActor(
   endDate: Option[LocalDateTime] = None) extends Entity
 
 object AuditActor extends AuditActorMapper {
-  
+
   /** 利用者監査ログを検索します。 */
-	def find(p: FindAuditActor)(implicit session: DBSession, dh: DomainHelper): PagingList[AuditActor] =
+  def find(p: FindAuditActor)(implicit session: DBSession, dh: DomainHelper): PagingList[AuditActor] =
     PagingList(AuditActor.withAlias(m =>
       findAllByWithLimitOffset(
         sqls.toAndConditionOpt(
@@ -60,49 +60,49 @@ object AuditActor extends AuditActorMapper {
         Seq(m.startDate.desc)
       )), p.page)
 
-	/** 利用者監査ログを登録します。 */
-	def register(p: RegAuditActor)(implicit session: DBSession, dh: DomainHelper): Long =
-		Some(dh.actor).map(actor =>
-  	  AuditActor.createWithAttributes(
-  	    'actorId -> actor.id,
+  /** 利用者監査ログを登録します。 */
+  def register(p: RegAuditActor)(implicit session: DBSession, dh: DomainHelper): Long =
+  Some(dh.actor).map(actor =>
+      AuditActor.createWithAttributes(
+        'actorId -> actor.id,
         'roleType -> actor.roleType.value,
         'source -> actor.source,
         'category -> p.category,
         'message -> ConvertUtils.left(p.message, 300),
         'statusType -> ActionStatusType.PROCESSING.value,
-        'startDate -> dh.time.date())
+        'startDate -> dh.time.date)
     ).get
     
-	/** 利用者監査ログを完了状態にします。 */
+  /** 利用者監査ログを完了状態にします。 */
   def finish(id: Long)(implicit session: DBSession, dh: DomainHelper): Unit = {
-	  val now = dh.time.date()
-	  val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
+    val now = dh.time.date
+    val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
       'statusType -> ActionStatusType.PROCESSED.value,
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())
-	}
-	
-	/** 利用者監査ログを取消状態にします。 */
-	def cancel(id: Long, errorReason: String)(implicit session: DBSession, dh: DomainHelper): Long = {
-	  val now = dh.time.date()
-	  val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
+  }
+  
+  /** 利用者監査ログを取消状態にします。 */
+  def cancel(id: Long, errorReason: String)(implicit session: DBSession, dh: DomainHelper): Long = {
+    val now = dh.time.date
+    val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
       'statusType -> ActionStatusType.CANCELLED.value,
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())
-	}
-	
-	/** 利用者監査ログを例外状態にします。 */
-	def error(id: Long, errorReason: String)(implicit session: DBSession, dh: DomainHelper): Long = {
-	  val now = dh.time.date()
-	  val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
+  }
+  
+  /** 利用者監査ログを例外状態にします。 */
+  def error(id: Long, errorReason: String)(implicit session: DBSession, dh: DomainHelper): Long = {
+    val now = dh.time.date
+    val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
       'statusType -> ActionStatusType.ERROR.value,
       'errorReason -> StringUtils.abbreviate(errorReason, 250),
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())
-	}
+  }
 }
 
 trait AuditActorMapper extends SkinnyORMMapper[AuditActor] {

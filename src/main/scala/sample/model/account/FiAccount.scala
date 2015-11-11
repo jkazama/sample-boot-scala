@@ -29,7 +29,7 @@ object FiAccount extends SkinnyORMMapper[FiAccount] {
   override def extract(rs: WrappedResultSet, rn: ResultName[FiAccount]): FiAccount = autoConstruct(rs, rn)
 
   def load(accountId: String, category: String, currency: String)(implicit s: DBSession): FiAccount =
-    FiAccount.withAlias { m =>
+    withAlias { m =>
       findBy(
         sqls.eq(m.accountId, accountId)
         .and(sqls.eq(m.category, category))
