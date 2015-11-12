@@ -1,7 +1,6 @@
 package sample.context
 
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.{CacheEvict, Cacheable}
 import org.springframework.stereotype.Component
 
 /**

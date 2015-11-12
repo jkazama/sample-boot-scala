@@ -4,6 +4,7 @@ import sample.UnitSpecSupport
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import java.time.LocalDate
+import sample.context.actor.ActorRoleType
 
 @RunWith(classOf[JUnitRunner])
 class AuditActorSpec extends UnitSpecSupport {
@@ -17,6 +18,7 @@ class AuditActorSpec extends UnitSpecSupport {
     AuditActor.finish(idA)
     AuditActor.cancel(idB, "取消")
     AuditActor.error(idC, "例外")
-    println(AuditActor.find(FindAuditActor(fromDay = LocalDate.now(), toDay = LocalDate.now())))
+    val list = AuditActor.find(FindAuditActor(roleType = ActorRoleType.ANONYMOUS, fromDay = LocalDate.now(), toDay = LocalDate.now()))
+    list.list.size should be (3)
   }
 }

@@ -1,17 +1,14 @@
 package sample.context.audit
 
-import sample.context.Entity
-import sample.context.actor.{Actor, ActorRoleType}
-import sample.ActionStatusType
 import java.time.{LocalDateTime, LocalDate, ZoneId}
-import sample.context.orm.Pagination
-import sample.context.{Dto, DomainHelper}
-import sample.util._
-import sample.context.orm._
-import sample._
 import org.apache.commons.lang3.StringUtils
 import scalikejdbc.jsr310.Implicits._
 import scalikejdbc._
+import sample._
+import sample.context._
+import sample.context.actor.{Actor, ActorRoleType}
+import sample.context.orm._
+import sample.util._
 
 /**
  * システム利用者の監査ログを表現します。
@@ -48,8 +45,8 @@ object AuditActor extends AuditActorMapper {
       findAllByWithLimitOffset(
         sqls.toAndConditionOpt(
           Some(sqls.between(m.startDate, p.fromDay.atStartOfDay(), DateUtils.dateTo(p.toDay))),
-          p.roleType.map(sqls.eq(m.roleType, _)),
-          p.statusType.map(sqls.eq(m.statusType, _)),
+          Some(sqls.eq(m.roleType, p.roleType.value)),
+          p.statusType.map(stype => sqls.eq(m.statusType, stype.value)),
           p.category.map(sqls.eq(m.category, _)),
           p.actorId.map(aid =>
             sqls.like(m.actorId, p.likeActorId).or(sqls.like(m.source, p.likeActorId))),
@@ -62,7 +59,7 @@ object AuditActor extends AuditActorMapper {
 
   /** 利用者監査ログを登録します。 */
   def register(p: RegAuditActor)(implicit session: DBSession, dh: DomainHelper): Long =
-  Some(dh.actor).map(actor =>
+    Some(dh.actor).map(actor =>
       AuditActor.createWithAttributes(
         'actorId -> actor.id,
         'roleType -> actor.roleType.value,
@@ -126,7 +123,7 @@ case class FindAuditActor(
   actorId: Option[String] = None,
   category: Option[String] = None,
   keyword: Option[String] = None,
-  roleType: Option[ActorRoleType] = None,
+  roleType: ActorRoleType,
   statusType: Option[ActionStatusType] = None,
   fromDay: LocalDate,
   toDay: LocalDate,

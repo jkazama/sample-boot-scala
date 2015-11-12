@@ -1,7 +1,7 @@
 package sample
 
-import sample.context.Enums
 import com.fasterxml.jackson.annotation.JsonValue
+import sample.context.Enums
 
 /**
  * 何らかの行為に関わる処理ステータス概念。
@@ -31,8 +31,11 @@ object ActionStatusType extends Enums[ActionStatusType] {
 
   /** 完了済みのステータス一覧 */
   def finishTypes = List(PROCESSED, CANCELLED)
+  def finishTypeValues: List[String] = finishTypes.map(_.value)
   /** 未完了のステータス一覧(処理中は含めない) */
   def unprocessingTypes = List(UNPROCESSED, ERROR)
+  def unprocessingTypeValues: List[String] = unprocessingTypes.map(_.value)
   /** 未完了のステータス一覧(処理中も含める) */
   def unprocessedTypes = List(UNPROCESSED, PROCESSING, ERROR)
+  def unprocessedTypeValues: List[String] = unprocessedTypes.map(_.value)
 }

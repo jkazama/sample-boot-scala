@@ -1,26 +1,25 @@
 package sample.model
 
+import java.time.LocalDate
 import org.springframework.stereotype.Component
-import sample.context.Timestamper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
-import sample.model.master.Holiday
-import java.time.LocalDate
-import scalikejdbc._
-import sample.model.master.RegHoliday
-import sample.util.DateUtils
 import org.springframework.context.annotation.Lazy
+import scalikejdbc._
+import sample.context._
+import sample.util.DateUtils
+import sample.model.master._
 
 /**
  * ドメインに依存する営業日関連のユーティリティハンドラ。
  */
 @Component
-class BusinessDayCalendar {
+class BusinessDayHandler {
   @Autowired
-  private var time: Timestamper = _
+  var time: Timestamper = _
   @Autowired(required = false)
   @Lazy
-  private var holidayAccessor: HolidayAccessor = _
+  var holidayAccessor: HolidayAccessor = _
   
   /** 営業日を返します。 */
   def day: LocalDate = time.day
@@ -31,7 +30,7 @@ class BusinessDayCalendar {
     if (0 < daysToAdd) {
       for (i <- 0 until daysToAdd) d = dayNext(d)
     } else {
-      for (i <- 0 until (-daysToAdd)) d = dayNext(d)
+      for (i <- 0 until (-daysToAdd)) d = dayPrevious(d)
     }
     d
   }

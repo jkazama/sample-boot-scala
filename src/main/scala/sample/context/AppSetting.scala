@@ -1,9 +1,9 @@
 package sample.context
 
 import scala.BigDecimal
-import sample.context.orm.SkinnyORMMapperWithIdStr
 import scalikejdbc._
 import sample._
+import sample.context.orm.SkinnyORMMapperWithIdStr
 
 /**
  * アプリケーション設定情報を表現します。

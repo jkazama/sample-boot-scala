@@ -1,10 +1,9 @@
 package sample.model.master
 
-import sample.ValidationException
 import scalikejdbc._
+import sample._
+import sample.context._
 import sample.context.orm.SkinnyORMMapper
-import sample.context.Entity
-import sample.ErrorKeys
 
 /**
  * サービス事業者の決済金融機関を表現します。

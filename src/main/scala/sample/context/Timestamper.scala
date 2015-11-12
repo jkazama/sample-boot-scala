@@ -1,13 +1,8 @@
 package sample.context
 
-import java.time.Clock
-import java.time.LocalDate
-import java.time.LocalDateTime
-
+import java.time.{Clock, LocalDate, LocalDateTime}
 import org.springframework.beans.factory.annotation.Autowired
-
-import sample.util.DateUtils
-import sample.util.TimePoint
+import sample.util._
 
 /**
  * 日時ユーティリティコンポーネント。
@@ -19,7 +14,8 @@ class Timestamper(clock: Clock) {
 
   /** 営業日を返します。 */
   def day: LocalDate = Option(setting) match {
-    case Some(sh) => DateUtils.day(sh.setting(Timestamper.KEY_DAY).str())
+    case Some(sh) =>
+      DateUtils.day(sh.setting(Timestamper.KeyDay).str())
     case None => LocalDate.now(clock)
   }
 
@@ -34,13 +30,13 @@ class Timestamper(clock: Clock) {
    * @param day 更新営業日
    */
   def proceedDay(day: LocalDate): Timestamper = {
-    Option(setting).map(_.update(Timestamper.KEY_DAY, DateUtils.dayFormat(day)))
+    Option(setting).map(_.update(Timestamper.KeyDay, DateUtils.dayFormat(day)))
     this
   }
 }
 
 object Timestamper {
-  val KEY_DAY: String = "system.businessDay.day"
+  val KeyDay: String = "system.businessDay.day"
   def apply(): Timestamper = apply(Clock.systemDefaultZone())
   def apply(clock: Clock): Timestamper = new Timestamper(clock)
 }

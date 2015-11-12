@@ -1,10 +1,9 @@
 package sample.model.account
 
-import sample.ValidationException
 import scalikejdbc._
+import sample._
+import sample.context._
 import sample.context.orm.SkinnyORMMapper
-import sample.context.Entity
-import sample.ErrorKeys
 
 /**
  * 口座に紐づく金融機関口座を表現します。

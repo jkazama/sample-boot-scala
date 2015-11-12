@@ -2,9 +2,7 @@ package sample.context.actor
 
 import java.util.Locale
 import com.fasterxml.jackson.annotation.JsonValue
-import sample.context.Dto
-import sample.context.Enums
-import sample.context.EnumSealed
+import sample.context.{Dto, Enums, EnumSealed}
 
 /** ユースケースにおける利用者を表現します。 */
 case class Actor(

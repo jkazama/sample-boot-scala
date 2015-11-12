@@ -1,11 +1,11 @@
 package sample.model.master
 
-import sample.context.{Entity, Dto}
 import java.time.{LocalDate, LocalDateTime}
-import sample.context.orm.SkinnyORMMapper
-import sample.util.DateUtils
 import scalikejdbc.jsr310._
 import scalikejdbc._
+import sample.context.{Entity, Dto}
+import sample.context.orm.SkinnyORMMapper
+import sample.util.DateUtils
 
 /**
  * 休日マスタを表現します。
@@ -30,14 +30,16 @@ object Holiday extends SkinnyORMMapper[Holiday] {
   /** 休日マスタを登録します。 */
   def register(p: RegHoliday)(implicit s: DBSession): Unit = {
     deleteBy(sqls
-      .eq(Holiday.column.category, p.category)
+      .eq(Holiday.column.category, p.categoryStr)
       .and.between(Holiday.column.day, LocalDate.ofYearDay(p.year, 1), DateUtils.dayTo(p.year)))
     p.list.foreach(v =>
-      createWithAttributes('category -> p.category, 'day -> v.day, 'name -> v.name))
+      createWithAttributes('category -> p.categoryStr, 'day -> v.day, 'name -> v.name))
   }
     
 }
 
-case class RegHoliday(category: String = "default", year: Int, list: Seq[RegHolidayItem]) extends Dto
+case class RegHoliday(category: Option[String] = None, year: Int, list: Seq[RegHolidayItem]) extends Dto {
+  def categoryStr: String = category.getOrElse("default")
+}
 
 case class RegHolidayItem(day: LocalDate, name: String) extends Dto

@@ -1,14 +1,12 @@
 package sample.model.account
 
-import sample.ValidationException
-import sample.context._
-import sample.context.orm.SkinnyORMMapperWithIdStr
-import scalikejdbc._
-import sample.ErrorKeys
 import com.fasterxml.jackson.annotation.JsonValue
-import sample.context.orm.SkinnyORMMapperWithIdStr
-import sample.context.actor.{ Actor, ActorRoleType }
 import org.springframework.security.crypto.password.PasswordEncoder
+import scalikejdbc._
+import sample._
+import sample.context._
+import sample.context.actor.{ Actor, ActorRoleType }
+import sample.context.orm.SkinnyORMMapperWithIdStr
 
 /**
  * 口座を表現します。
@@ -32,6 +30,10 @@ case class Account(
 
 object Account extends AccountMapper {
 
+  /** 有効な口座を取得します。 */
+  def getActive(id: String)(implicit s: DBSession): Option[Account] =
+    findById(id).filter(!_.statusType.inactive)
+  
   /** 有効な口座を返します */
   def loadActive(id: String)(implicit s: DBSession): Account = findById(id) match {
     case Some(acc) if acc.statusType.inactive => throw ValidationException("error.Account.loadActive")

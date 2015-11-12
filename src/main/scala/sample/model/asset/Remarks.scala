@@ -3,7 +3,7 @@ package sample.model.asset
 /**
  * 摘要定数
  */
-trait Remarks {
+object Remarks {
   /** 振込入金 */
   val CashIn = "cashIn"
   /** 振込入金(調整) */

@@ -17,13 +17,11 @@ import sample.context.Enums
  */
 @Component
 class IdLockHandler {
-  val lockMap: scala.collection.mutable.Map[Serializable, ReentrantReadWriteLock] =
+  val lockMap: scala.collection.mutable.Map[String, ReentrantReadWriteLock] =
     scala.collection.mutable.Map()
 
   /** IDロック上で処理を実行します。 */
-  def call(id: Serializable, lockType: LockType, command: () => Unit) =
-    call[Unit](id, lockType, () => command())
-  def call[T](id: Serializable, lockType: LockType, callable: () => T): T = {
+  def call[T](id: String, lockType: LockType, callable: () => T): T = {
     if (lockType.isWrite) {
       writeLock(id)
     } else {
@@ -39,18 +37,18 @@ class IdLockHandler {
     }
   }
     
-  def writeLock(id: Serializable): Unit =
+  def writeLock(id: String): Unit =
     Option(id).map(v =>
       lockMap.synchronized(idLock(v).writeLock().lock()))
 
-  private def idLock(id: Serializable): ReentrantReadWriteLock =
+  private def idLock(id: String): ReentrantReadWriteLock =
     lockMap.getOrElseUpdate(id, new ReentrantReadWriteLock())
 
-  def readLock(id: Serializable): Unit =
+  def readLock(id: String): Unit =
     Option(id).map(v =>
       lockMap.synchronized(idLock(v).readLock().lock()))
 
-  def unlock(id: Serializable): Unit =
+  def unlock(id: String): Unit =
     Option(id).map(v =>
       lockMap.synchronized(
         idLock(v) match {

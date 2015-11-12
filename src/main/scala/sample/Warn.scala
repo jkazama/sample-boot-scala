@@ -1,7 +1,7 @@
 package sample
 
-import sample.context.Enums
 import com.fasterxml.jackson.annotation.JsonValue
+import sample.context.Enums
 
 /**
  * フィールドスコープの審査例外トークン。

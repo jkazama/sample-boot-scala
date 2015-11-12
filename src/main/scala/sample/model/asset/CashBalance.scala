@@ -16,7 +16,7 @@ import scala.math.BigDecimal.RoundingMode
  */
 case class CashBalance(
   /** ID */
-  id: Long,
+  id: Long = 0,
   /** 口座ID */
   accountId: String,
   /** 基準日 */

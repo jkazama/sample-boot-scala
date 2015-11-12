@@ -1,18 +1,14 @@
 package sample.model.asset
 
-import sample.context._
+import java.time.{LocalDate, LocalDateTime}
+import scala.util.{Try, Success, Failure}
 import com.fasterxml.jackson.annotation.JsonValue
-import sample.context.EnumSealed
-import sample.ActionStatusType
-import java.time.LocalDateTime
-import java.time.LocalDate
-import sample.context.orm.SkinnyORMMapper
 import scalikejdbc.jsr310.Implicits._
 import scalikejdbc._
-import sample.context.Dto
-import sample.util.Validator
 import sample._
-import scala.util.{Try, Success, Failure}
+import sample.context._
+import sample.context.orm.SkinnyORMMapper
+import sample.util.Validator
 
 /**
  * 入出金キャッシュフローを表現します。
@@ -48,10 +44,10 @@ case class Cashflow(
 
   /** キャッシュフローを処理済みにして残高へ反映します。 */
   def realize()(implicit s: DBSession, dh: DomainHelper): Long =
-    Validator.validateTry(v => {
+    Validator.validateTry(v =>
       v.verify(canRealize, "error.Cashflow.realizeDay")
-      v.verify(statusType.isUnprocessing, "error.ActionStatusType.unprocessing")
-    }) match {
+       .verify(statusType.isUnprocessing, "error.ActionStatusType.unprocessing")
+    ) match {
       case Success(v) =>
         Cashflow.updateById(id).withAttributes(
           'statusType -> ActionStatusType.PROCESSED.value)
@@ -83,12 +79,14 @@ object Cashflow extends CashflowMapper {
     findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
   
   /** 指定受渡日時点で未実現のキャッシュフロー一覧を検索します。 */
-  def findUnrealize(valueDay: LocalDate)(implicit s: DBSession): List[Cashflow] =
+  def findUnrealize(accountId: String, currency: String, valueDay: LocalDate)(implicit s: DBSession): List[Cashflow] =
     withAlias(m =>
       findAllBy(
         sqls
-          .le(m.valueDay, valueDay)
-          .in(m.statusType, ActionStatusType.unprocessingTypes),
+          .eq(m.accountId, accountId)
+          .and.eq(m.currency, currency)
+          .and.le(m.valueDay, valueDay)
+          .and.in(m.statusType, ActionStatusType.unprocessingTypeValues),
         Seq(m.id)))
 
   /** 指定受渡日で実現対象となるキャッシュフロー一覧を検索します。 */
@@ -97,7 +95,7 @@ object Cashflow extends CashflowMapper {
       findAllBy(
         sqls
           .eq(m.valueDay, valueDay)
-          .in(m.statusType, ActionStatusType.unprocessedTypes),
+          .and.in(m.statusType, ActionStatusType.unprocessedTypeValues),
         Seq(m.id)))
 
   /**
@@ -129,6 +127,7 @@ object Cashflow extends CashflowMapper {
 trait CashflowMapper extends SkinnyORMMapper[Cashflow] {
   override def extract(rs: WrappedResultSet, n: ResultName[Cashflow]) =
     Cashflow(
+      id = rs.long(n.id),
       accountId = rs.string(n.accountId),
       currency = rs.string(n.currency),
       amount = rs.bigDecimal(n.amount),

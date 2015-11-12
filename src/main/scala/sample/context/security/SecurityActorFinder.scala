@@ -1,19 +1,18 @@
 package sample.context.security
 
+import scala.beans.BeanInfo
+import scala.collection.JavaConversions._
+import java.util.Collection
+import javax.servlet.http.HttpServletRequest
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
-import org.springframework.security.core.userdetails.UserDetailsService
-import scala.beans.BeanInfo
-import org.springframework.security.core.userdetails.UserDetails
-import sample.context.actor.Actor
-import org.springframework.security.core.GrantedAuthority
-import javax.servlet.http.HttpServletRequest
-import java.util.Collection
-import scala.collection.JavaConversions._
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails._
+import org.springframework.security.core.context.SecurityContextHolder
+import sample.context.actor.Actor
 
 /**
  * Spring Securityで利用される認証/認可対象となるユーザ情報を提供します。

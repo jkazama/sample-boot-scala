@@ -1,17 +1,12 @@
 package sample.context.audit
 
 import java.time.{ LocalDateTime, LocalDate, ZoneId }
-import sample._
-import scalikejdbc._
-import sample.context.orm.SkinnyORMMapper
-import sample.context.orm.PagingList
-import sample.context._
-import sample.util._
-import scalikejdbc.WrappedResultSet
-import sample.context.DomainHelper
-import sample.context.actor.ActorRoleType
 import org.apache.commons.lang3.StringUtils
+import scalikejdbc._
+import sample._
+import sample.context._
 import sample.context.orm._
+import sample.util._
 
 /**
  * システムイベントの監査ログを表現します。
@@ -42,7 +37,7 @@ object AuditEvent extends AuditEventMapper {
       findAllByWithLimitOffset(
         sqls.toAndConditionOpt(
           Some(sqls.between(m.startDate, p.fromDay.atStartOfDay(), DateUtils.dateTo(p.toDay))),
-          p.statusType.map(sqls.eq(m.statusType, _)),
+          p.statusType.map(stype => sqls.eq(m.statusType, stype.value)),
           p.category.map(sqls.eq(m.category, _)),
           p.keyword.map(k =>
             sqls.like(m.message, p.likeKeyword).or(sqls.like(m.errorReason, p.likeKeyword)))

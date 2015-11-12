@@ -1,7 +1,6 @@
 package sample.util
 
-import sample.Warn
-import sample.ValidationException
+import sample.{Warn, ValidationException}
 import scala.util.Try
 
 /**
@@ -43,10 +42,9 @@ object Validator {
   def apply(): Validator = Validator(Seq())
   
   /** 審査処理を行います。 */
-  def validate(proc: Validator => Validator): Unit = {
-    val validator = Validator()
-    proc(validator).verify()
-  }
+  def validate(proc: Validator => Validator): Unit =
+    proc(Validator()).verify()
+
   def validateTry(proc: Validator => Validator): Try[Unit] = Try(validate(proc))
 }
 

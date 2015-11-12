@@ -1,10 +1,9 @@
 package sample.context
 
+import scala.beans.BeanInfo
 import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
-import sample.context.actor.ActorSession
-import sample.context.actor.Actor
-import scala.beans.BeanInfo
+import sample.context.actor.{Actor, ActorSession}
 
 /**
  * ドメイン処理を行う上で必要となるインフラ層コンポーネントへのアクセサを提供します。

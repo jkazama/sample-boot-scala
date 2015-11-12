@@ -7,12 +7,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import sample.ErrorKeys
-import sample.InvocationException
-import sample.ValidationException
-import sample.context.DomainHelper
+import scalikejdbc._
+
+import sample._
+import sample.context._
 import sample.context.actor.ActorSession
-import scalikejdbc.DBSession
 
 /**
  * 利用者監査やシステム監査(定時バッチや日次バッチ等)などを取り扱います。
@@ -32,9 +31,9 @@ class AuditHandler {
   private var persister: AuditPersister = _
 
   /** 与えた処理に対し、監査ログを記録します。 */
-  def audit[T](message: String, callable: Unit => T): T =
+  def audit[T](message: String, callable: () => T): T =
     audit("default", message, callable)
-  def audit[T](category: String, message: String, callable: Unit => T): T = {
+  def audit[T](category: String, message: String, callable: () => T): T = {
     logger.trace(msg(message, "[開始]"))
     val start = System.currentTimeMillis()
     try {
@@ -66,12 +65,12 @@ class AuditHandler {
     }
     sb.append(message);
     if (startMillis.isDefined) {
-      sb.append(s" [${System.currentTimeMillis() - startMillis.get}ms]")
+      sb.append(s" [${System.currentTimeMillis() - startMillis.get} ms]")
     }
     return sb.toString()
   }
 
-  def callAudit[T](category: String, message: String, callable: Unit => T): T = {
+  def callAudit[T](category: String, message: String, callable: () => T): T = {
     var id: Option[Long] = Option.empty
     try {
       Try(id = Option(persister.startActor(RegAuditActor(category, message)))) match {
@@ -95,7 +94,7 @@ class AuditHandler {
     }    
   }
   
-  def callEvent[T](category: String, message: String, callable: Unit => T): T = {
+  def callEvent[T](category: String, message: String, callable: () => T): T = {
     var id: Option[Long] = Option.empty
     try {
       Try(id = Option(persister.startEvent(RegAuditEvent(category, message)))) match {

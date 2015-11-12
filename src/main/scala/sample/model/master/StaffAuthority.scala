@@ -1,8 +1,8 @@
 package sample.model.master
 
-import sample.context.Entity
-import sample.context.orm.SkinnyORMMapper
 import scalikejdbc._
+import sample.context._
+import sample.context.orm.SkinnyORMMapper
 
 /**
  * 社員に割り当てられた権限を表現します。

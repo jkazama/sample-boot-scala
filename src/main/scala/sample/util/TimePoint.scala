@@ -1,8 +1,7 @@
 package sample.util
 
 import java.time.{Clock, LocalDateTime, LocalDate}
-import sample.model.constraints.ISODate
-import sample.model.constraints.ISODateTime
+import sample.model.constraints.{ISODate, ISODateTime}
 
 /**
  * 日付と日時のペアを表現します。

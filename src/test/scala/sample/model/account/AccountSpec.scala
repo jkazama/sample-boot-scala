@@ -9,7 +9,6 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AccountSpec extends UnitSpecSupport {
-  val encoder = new BCryptPasswordEncoder()
 
   behavior of "口座管理"
   

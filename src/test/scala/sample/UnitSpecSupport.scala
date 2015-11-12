@@ -1,21 +1,15 @@
 package sample
 
-import org.scalatest.BeforeAndAfter
-import org.scalatest.Finders
-import org.scalatest.ShouldMatchers
-import org.scalatest.fixture.FlatSpec
-import org.springframework.context.annotation.Primary
-import org.springframework.stereotype.Component
-import javax.annotation.PostConstruct
-import sample.context.DomainHelper
-import sample.context.Timestamper
-import sample.context.orm.SkinnyOrm
-import sample.model.DataFixtures
-import scalikejdbc.scalatest.AutoRollback
 import java.time.Clock
+import org.scalatest._
+import org.scalatest.fixture.FlatSpec
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import scalikejdbc.scalatest.AutoRollback
+import sample.context._
 import sample.context.actor.ActorSession
-import sample.context.AppSettingHandler
-import sample.context.AppSetting
+import sample.context.orm.SkinnyOrm
+import sample.model._
 
 trait UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter with ShouldMatchers {
 
@@ -27,6 +21,13 @@ trait UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter wit
       actorSession = new ActorSession()
       settingHandler = MockAppSettingHandler()
     }
+  
+  val businessDay: BusinessDayHandler =
+    new BusinessDayHandler {
+      time = dh.time
+      holidayAccessor = new HolidayAccessor
+    }
+  val encoder: PasswordEncoder = new BCryptPasswordEncoder()
 
   val orm: SkinnyOrm = new SkinnyOrm()
 
