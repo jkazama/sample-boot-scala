@@ -43,9 +43,20 @@ Spring Boot は様々な利用方法が可能ですが、本サンプルでは�
 
 #### Scalaコーディング方針
 
-TBD
+基盤インフラがJavaという事もあり、基本はBetter Javaで。（あまり最適化をがんばらない）
 
-基本はBetter Javaで。（あまり最適化をがんばらない）
+- 名称やパッケージは既存クラスと重複しても良いのでなるべく簡潔に。
+- インターフェースの濫用をしない。
+    - 基盤でも無いのでDSL的なものは作りこまずになるべくシンプルに。
+- 列挙型は標準のEnumを利用せずに sealed trait で独自に定義。
+- 副作用を避け case class を使えるところはなるべく使う。
+    - varはSpringのDI等、必要な部分のみに限定
+- 例外処理はEitherなどを用いたプラグラマティックなアプローチを取らずにJava風に上位へ投げ捨て。
+    - 自己完結する例外処理をする際はTryを利用
+    - 終端はAOPで一括処理する
+- UI層をSpringMVCとScalaとのブリッジ層として割り切って考える。
+    - APIの入力チェックはJava側の仕組み(JSR303 Bean Validation)を利用する
+    - アノテーションの実装もjavaでオーソドックスに作る
 
 #### パッケージ構成
 
@@ -62,9 +73,10 @@ main
       util                            … 汎用ユーティリティ
       - Application.scala             … 実行可能な起動クラス
   resources
-    - application.yml                 … 設定ファイル
+    - application.conf                … Skinny ORM 設定ファイル
+    - application.yml                 … Spring Boot 設定ファイル
     - ehcache.xml                     … Spring Cache 設定ファイル
-    - logback.xml                     … ロギング設定ファイル
+    - logback-spring.xml              … ロギング設定ファイル
     - messages-validation.properties  … 例外メッセージリソース
     - messages.properties             … メッセージリソース
 ```
@@ -86,13 +98,32 @@ main
 
 #### サーバ起動（IntelliJ IDEA）
 
-TBD
+開発IDEである[IntelliJ IDEA](https://www.jetbrains.com/idea/)で本サンプルを利用するには、事前に以下の手順を行っておく必要があります。
+
+- JDK8以上のインストール
+- IntelliJ IDEA のインストール
+- Scala プラグインのインストール
+
+次の手順で本サンプルをプロジェクト化してください。  
+
+1. *Import Project*でダウンロードした*sample-boot-scala*ディレクトリを選択
+1. *Import project from external model*で*Gradle*を選択して*Next*を押下
+1. 内容を確認して*Finish*を押下
+
+*※JDKの設定がされていない時は忘れずに設定してください*
+
+次の手順で本サンプルを実行してください。
+
+1. *Application.scala*に対し「右クリック -> Run Application」
+1. *Console*タブに「Started Application」という文字列が出力されればポート8080で起動が完了
+1. ブラウザを立ち上げて「http://localhost:8080/api/management/health」で状態を確認
 
 #### サーバ起動（Eclipse）
 
 開発IDEである[Eclipse](https://eclipse.org/)で本サンプルを利用するには、事前に以下の手順を行っておく必要があります。
 
 - JDK8以上のインストール
+- Eclipse (Juno以降) のインストール
 - Gradle Plugin (`Pivotal`) のインストール
     - Eclipse に同梱されている方のプラグインではないので注意してください
 - Scala IDE のインストール
@@ -102,7 +133,8 @@ TBD
 
 1. パッケージエクスプローラから「右クリック -> Import -> Project」で*Gradle Project*を選択して*Next*を押下
 1. *Root folder:*にダウンロードした*sample-boot-scala*ディレクトリを指定して*Build Model*を押下
-1. *Project*で*sample-boot-hibernate*を選択後、*Finish*を押下(依存ライブラリダウンロードがここで行われます)
+1. *Project*で*sample-boot-scala*を選択後、*Finish*を押下(依存ライブラリダウンロードがここで行われます)
+1. 追加されたプロジェクト上で「右クリック -> Configure -> Add Scala Nature」を押下
 
 次の手順で本サンプルを実行してください。
 
@@ -167,14 +199,15 @@ Spring BootではExecutable Jar(ライブラリなども内包する実行可能
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
 | `spring-boot-starter-*` | 1.3.0    | Spring Boot基盤 (actuator/security/aop/cache/web) |
+| `scala-compiler/library`| 2.11.7   | Scalaコンパイラ/基本ライブラリ |
+| `skinny-orm`            | 2.0.0    | ScalaベースのORMライブラリ |
+| `scalikejdbc-jsr310`    | 2.2.9    | Skinny ORMのJSR310対応 |
 | `ehcache-core`          | 2.6.+    | 最新のEhCache設定記法を利用するため |
-| `jackson-datatype-*`    | 2.6.+    | JSON変換時のJava8/Hibernate対応 |
+| `jackson-datatype-jsr310`| 2.6.+    | JSON変換時のJSR310対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
 | `icu4j-*`               | 54.1.+   | 文字変換ライブラリ |
 
 *※実際の詳細な定義は`build.gradle`を参照してください*
-
-TBD Scalaブリッジライブラリの記載追加
 
 ### 補足解説（インフラ層）
 
@@ -185,7 +218,9 @@ TBD Scalaブリッジライブラリの記載追加
 #### DB/トランザクション
 
 `sample.context.orm`直下。
-TODO Skinny ORM の利用方針に触れる
+ドメイン実装をよりEntityに寄せるためのSkinny ORMサポート実装です。
+トランザクション定義はトラブルの種となるのでアプリケーション層でのみ許し、なるべく狭く限定した形で付与しています。
+EntityとテーブルのマッピングはautoConstructの自動バインドを頼りますが、Enum等のカスタム要素を含む場合はextractでベタにマッピングしています。
 
 #### 認証/認可
 
@@ -213,7 +248,10 @@ TODO Skinny ORM の利用方針に触れる
 
 #### テスト
 
-TBD
+パターンとしては通常のSpringコンテナを用いる2パターン(WebMockテスト/コンテナテスト)と、Skinny ORMだけに閉じた実行時間に優れたテスト(Entityのみが対象)の合計3パターンで考えます。（それぞれ基底クラスは `ControllerSpecSupport` / `ContainerSpecSupport` / `UnitSpecSupport`）  
+テスト対象にServiceまで含めるてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
+
+サンプルではcontrollerをJUnitベース、modelやutilとScalaTestベースでテストしています。
 
 ### License
 

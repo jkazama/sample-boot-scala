@@ -102,9 +102,9 @@ class RestErrorAdvice {
 
 /**
  * 例外情報のスタックを表現します。
- * <p>スタックした例外情報は{@link #result(HttpStatus)}を呼び出す事でMapを持つResponseEntityへ変換可能です。
+ * <p>スタックした例外情報はresult(HttpStatus)を呼び出す事でMapを持つResponseEntityへ変換可能です。
  * Mapのkeyはfiled指定値、valueはメッセージキーの変換値(messages-validation.properties)が入ります。
- * <p>{@link #errorGlobal}で登録した場合のキーは空文字となります。
+ * <p>#errorGlobalで登録した場合のキーは空文字となります。
  * <p>クライアント側は戻り値を [{"fieldA": "messageA"}, {"fieldB": "messageB"}]で受け取ります。
  */
 case class ErrorHolder(errors: Map[Option[String], Seq[Warn]], msg: MessageSource, locale: Locale) {
