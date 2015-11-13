@@ -1,8 +1,9 @@
 package sample.context
 
-import sample.UnitSpecSupport
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
+import sample.UnitSpecSupport
 
 @RunWith(classOf[JUnitRunner])
 class AppSettingSpec extends UnitSpecSupport {

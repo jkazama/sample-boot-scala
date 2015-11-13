@@ -1,9 +1,9 @@
 package sample.context.orm
 
 import org.junit.runner.RunWith
-import org.scalatest.ShouldMatchers
-import org.scalatest.WordSpec
+import org.scalatest._
 import org.scalatest.junit.JUnitRunner
+
 import sample.context.orm.SortOrder._
 
 @RunWith(classOf[JUnitRunner])

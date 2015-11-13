@@ -1,14 +1,16 @@
 package sample.usecase
 
+import org.springframework.boot.autoconfigure.condition._
+import org.springframework.context.annotation.Bean
+
 import org.springframework.context.annotation.Configuration
-import sample.context.security._
-import sample.util.ConvertUtils
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+
 import sample.ErrorKeys
-import org.springframework.context.annotation.Bean
-import org.springframework.boot.autoconfigure.condition._
+import sample.context.security._
 import sample.context.security.SecurityAuthConfig
+import sample.util.ConvertUtils
 
 /**
  * SpringSecurityのユーザアクセスコンポーネントを定義します。

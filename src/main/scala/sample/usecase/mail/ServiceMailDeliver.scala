@@ -1,10 +1,12 @@
 package sample.usecase.mail
 
-import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
-import scalikejdbc._
+
+import org.springframework.stereotype.Component
+
 import sample.context.mail.MailHandler
 import sample.model.asset._
+import scalikejdbc._
 
 /**
  * アプリケーション層のサービスメール送信を行います。

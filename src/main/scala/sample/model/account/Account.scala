@@ -1,12 +1,14 @@
 package sample.model.account
 
-import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.security.crypto.password.PasswordEncoder
-import scalikejdbc._
+
+import com.fasterxml.jackson.annotation.JsonValue
+
 import sample._
 import sample.context._
 import sample.context.actor.{ Actor, ActorRoleType }
 import sample.context.orm.SkinnyORMMapperWithIdStr
+import scalikejdbc._
 
 /**
  * 口座を表現します。

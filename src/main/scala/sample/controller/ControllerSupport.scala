@@ -1,28 +1,25 @@
 package sample.controller
 
-import scala.util.{Try, Success, Failure}
-import org.apache.commons.io.FilenameUtils
+import java.net.URLEncoder
+import java.util.Locale
+
+import scala.beans.BeanInfo
+import scala.collection.JavaConversions._
+import scala.util.{ Try, Success, Failure }
+
+import org.apache.commons.io._
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import sample.context.Timestamper
-import sample.context.ResourceBundleHandler
-import java.util.Locale
-import sample.context.actor.ActorSession
-import org.springframework.http.ResponseEntity
-import org.springframework.http.HttpStatus
-import scala.collection.JavaConversions._
+import org.springframework.http._
 import org.springframework.web.multipart.MultipartFile
-import sample._
-import sample.context.report.ReportFile
+
 import javax.servlet.http.HttpServletResponse
-import org.springframework.http.MediaType
-import java.net.URLEncoder
-import org.apache.commons.io.IOUtils
-import sample.context.orm.SortOrder
-import scala.beans.BeanInfo
-import sample.context.orm.Sort
-import sample.context.orm.Pagination
+import sample._
+import sample.context._
+import sample.context.actor.ActorSession
+import sample.context.orm._
+import sample.context.report.ReportFile
 
 /** UIコントローラの基底クラス。 */
 class ControllerSupport {
@@ -50,12 +47,12 @@ class ControllerSupport {
    * 戻り値を生成して返します。(戻り値がプリミティブまたはnullを許容する時はこちらを利用してください)
    * ※nullはJSONバインドされないため、クライアント側でStatusが200にもかかわらず例外扱いされる可能性があります。
    */
-  protected def result[T](t: T): ResponseEntity[T] = ResponseEntity.status(HttpStatus.OK).body(t)
-  protected def result[T](command: () => T): ResponseEntity[T] = result(command())
-  protected def resultMap[T](key: String, t: T): ResponseEntity[java.util.Map[String, T]] = result(Map(key -> t))
+  protected def result[T](command: => T): ResponseEntity[T] = resultObject(command)
+  protected def resultObject[T](t: T): ResponseEntity[T] = ResponseEntity.status(HttpStatus.OK).body(t)
+  protected def resultMap[T](key: String, t: T): ResponseEntity[java.util.Map[String, T]] = resultObject(Map(key -> t))
   protected def resultMap[T](t: T): ResponseEntity[java.util.Map[String, T]] = resultMap("result", t)
-  protected def resultEmpty(command: () => Unit = () => ()): ResponseEntity[Void] = {
-    command()
+  protected def resultEmpty(command: => Unit = () => ()): ResponseEntity[Void] = {
+    command
     ResponseEntity.status(HttpStatus.OK).build()
   }
   

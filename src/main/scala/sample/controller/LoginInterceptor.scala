@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
-import sample.context.actor.Actor
-import sample.context.actor.ActorSession
-import sample.context.actor.ActorRoleType
+
+import sample.context.actor._
 import sample.context.security.SecurityAuthConfig
 
 /**

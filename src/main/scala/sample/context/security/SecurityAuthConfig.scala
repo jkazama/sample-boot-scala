@@ -1,9 +1,9 @@
 package sample.context.security
 
 import java.util.Locale
-import javax.servlet._
-import javax.servlet.http._
+
 import scala.beans.BeanInfo
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition._
 import org.springframework.boot.autoconfigure.web.ServerProperties
@@ -24,9 +24,12 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication._
 import org.springframework.security.web.authentication.logout._
-import org.springframework.web.filter._
 import org.springframework.stereotype.Component
-import sample.ErrorKeys
+import org.springframework.web.filter._
+
+import javax.servlet._
+import javax.servlet.http._
+import sample._
 import sample.context.actor.ActorSession
 
 /**

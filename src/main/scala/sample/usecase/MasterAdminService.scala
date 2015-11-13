@@ -1,11 +1,9 @@
 package sample.usecase
 
 import org.springframework.cache.annotation.Cacheable
-import sample.model.master.Staff
 import org.springframework.stereotype.Service
-import sample.model.master.StaffAuthority
-import sample.model.master.RegHoliday
-import sample.model.master.Holiday
+
+import sample.model.master._
 
 /**
  * サービスマスタドメインに対する社内ユースケース処理。
@@ -24,7 +22,7 @@ class MasterAdminService extends ServiceSupport {
     tx(implicit session => StaffAuthority.findByStaffId(staffId))
 
   def registerHoliday(p: RegHoliday): Unit =
-    audit.audit("休日情報を登録する", () =>
+    audit.audit("休日情報を登録する",
       tx(implicit session => Holiday.register(p)))
 
 }

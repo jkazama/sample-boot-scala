@@ -1,8 +1,8 @@
 package sample.context.orm
 
-import skinny.orm.SkinnyCRUDMapper
-import scalikejdbc.interpolation.SQLSyntax
 import scalikejdbc._
+
+import skinny.orm.SkinnyCRUDMapper
 
 trait SkinnyORMMapper[Entity] extends SkinnyCRUDMapper[Entity] {
   override lazy val defaultAlias = createAlias(aliasName)

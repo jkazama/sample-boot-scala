@@ -1,14 +1,17 @@
 package sample.model.asset
 
 import java.time.{LocalDate, LocalDateTime}
-import scala.util.{Try, Success, Failure}
+
+import scala.util.{ Success, Failure }
+
 import com.fasterxml.jackson.annotation.JsonValue
-import scalikejdbc.jsr310.Implicits._
-import scalikejdbc._
+
 import sample._
 import sample.context._
 import sample.context.orm.SkinnyORMMapper
 import sample.util.Validator
+import scalikejdbc._
+import scalikejdbc.jsr310.Implicits._
 
 /**
  * 入出金キャッシュフローを表現します。

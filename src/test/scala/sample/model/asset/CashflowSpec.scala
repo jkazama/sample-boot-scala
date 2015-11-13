@@ -1,13 +1,13 @@
 package sample.model.asset
 
-import java.time.LocalDate
+import scala.math.BigDecimal
+import scala.util.{ Failure, Success, Try }
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import sample.UnitSpecSupport
-import sample.model.DataFixtures
-import scala.util.{Try, Success, Failure}
-import sample.ActionStatusType
-import scala.math.BigDecimal
+
+import sample._
+import sample.model.DataFixtures._
 
 //low: 簡易な正常系検証が中心。依存するCashBalanceの単体検証パスを前提。
 @RunWith(classOf[JUnitRunner])
@@ -19,7 +19,6 @@ class CashflowSpec extends UnitSpecSupport {
     val baseDay = businessDay.day
     val baseMinus1Day = businessDay.day(-1)
     val basePlus1Day = businessDay.day(1)
-    println(basePlus1Day)
     // 過去日付の受渡でキャッシュフロー発生 [例外]
     Try(Cashflow.register(
         RegCashflow("test1", "JPY", BigDecimal("1000"), CashflowType.CashIn, "cashIn", None, baseMinus1Day))) match {
@@ -36,7 +35,6 @@ class CashflowSpec extends UnitSpecSupport {
   }
   
   it should "未実現キャッシュフローを実現する" in { implicit session =>
-    import DataFixtures._
     val baseDay = businessDay.day
     val baseMinus1Day = businessDay.day(-1)
     val baseMinus2Day = businessDay.day(-2)

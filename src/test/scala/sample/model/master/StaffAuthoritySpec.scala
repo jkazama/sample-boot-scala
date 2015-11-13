@@ -1,8 +1,9 @@
 package sample.model.master
 
-import sample.UnitSpecSupport
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
+import sample._
 import scalikejdbc._
 
 @RunWith(classOf[JUnitRunner])

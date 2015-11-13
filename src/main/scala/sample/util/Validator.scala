@@ -1,7 +1,8 @@
 package sample.util
 
-import sample.{Warn, ValidationException}
 import scala.util.Try
+
+import sample.{Warn, ValidationException}
 
 /**
  * 審査例外の構築概念を表現します。

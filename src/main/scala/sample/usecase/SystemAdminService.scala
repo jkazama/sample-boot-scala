@@ -1,10 +1,10 @@
 package sample.usecase
 
 import org.springframework.stereotype.Service
-import sample.context.orm.PagingList
+
+import sample.context._
 import sample.context.audit._
-import sample.context.FindAppSetting
-import sample.context.AppSetting
+import sample.context.orm.PagingList
 
 /**
  * システムドメインに対する社内ユースケース処理。
@@ -25,11 +25,9 @@ class SystemAdminService extends ServiceSupport {
     tx(implicit session => AppSetting.find(p))
 
   def changeAppSetting(id: String, value: String): Unit =
-    audit.audit("アプリケーション設定情報を変更する", () =>
-      dh.settingSet(id, value))
+    audit.audit("アプリケーション設定情報を変更する", dh.settingSet(id, value))
       
   def processDay(): Unit =
-    audit.audit("営業日を進める", () =>
-      dh.time.proceedDay(businessDay.day(1)))
+    audit.audit("営業日を進める", dh.time.proceedDay(businessDay.day(1)))
 
 }

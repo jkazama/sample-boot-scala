@@ -1,9 +1,9 @@
 package sample.context.orm
 
-import javax.annotation.{PreDestroy, PostConstruct}
-
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
+
+import javax.annotation.{PreDestroy, PostConstruct}
 import scalikejdbc.{LoggingSQLAndTimeSettings, GlobalSettings}
 import skinny.DBSettings
 

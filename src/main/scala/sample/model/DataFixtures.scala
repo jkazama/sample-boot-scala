@@ -1,20 +1,21 @@
 package sample.model
 
-import javax.annotation.PostConstruct
 import java.time._
 import scala.beans.BeanInfo
-import org.springframework.boot.autoconfigure._
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure._
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
-import scalikejdbc._
+import javax.annotation.PostConstruct
 import sample._
 import sample.context._
 import sample.context.orm._
-import sample.util._
 import sample.model.account._
 import sample.model.asset._
 import sample.model.master._
+import sample.util._
+import scalikejdbc._
 
 /**
  * データ生成用のサポートコンポーネント。
@@ -22,7 +23,7 @@ import sample.model.master._
  * low: 実際の開発では開発/テスト環境のみ有効となるよう細かなプロファイル指定が必要となります。
  */
 @Component
-@AutoConfigureAfter(Array(classOf[SkinnyOrm]))
+@ConditionalOnProperty(prefix = "extension.datafixture", name = Array("enabled"), matchIfMissing = false)
 @BeanInfo
 class DataFixtures {
   
@@ -59,7 +60,6 @@ class DataFixtures {
       saveCb(idSample, businessDay.day, ccy, "1000000")
     }
   }
-
 }
 
 object DataFixtures extends DdlExecutor {
@@ -97,13 +97,14 @@ object DataFixtures extends DdlExecutor {
       'eventDay -> eventDay, 'eventDate -> LocalDateTime.now, 'valueDay -> valueDay,
       'statusType -> statusType.value)).get
   
-  /** 振込入出金依頼の簡易生成 [発生日(T+1)/受渡日(T+3)] */
+  /** 振込入出金依頼の簡易生成 [発生日(T+1)/受渡日(T+3)]。（発生日指定時は発生日 = 受渡日） */
   def saveCio(businessDay: BusinessDayHandler,
-      accountId: String, absAmount: String, withdrawal: Boolean)(implicit session: DBSession): CashInOut =
+      accountId: String, absAmount: String, withdrawal: Boolean, eventDay: Option[LocalDate] = None)(implicit session: DBSession): CashInOut =
     CashInOut.findById(CashInOut.createWithAttributes(
       'accountId -> accountId, 'currency -> "JPY", 'absAmount -> BigDecimal(absAmount),
       'withdrawal -> withdrawal, 'requestDay -> businessDay.day, 'requestDate -> LocalDateTime.now,
-      'eventDay -> businessDay.day(1), 'valueDay -> businessDay.day(3),
+      'eventDay -> eventDay.getOrElse(businessDay.day(1)),
+      'valueDay -> eventDay.getOrElse(businessDay.day(3)),
       'targetFiCode -> "tFiCode", 'targetFiAccountId -> "tFiAccId",
       'selfFiCode -> "sFiCode", 'selfFiAccountId -> "sFiAccId",
       'statusType -> ActionStatusType.UNPROCESSED.value, 'updateDate -> LocalDateTime.now)).get

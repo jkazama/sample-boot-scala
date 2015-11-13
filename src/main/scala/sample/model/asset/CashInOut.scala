@@ -1,16 +1,18 @@
 package sample.model.asset
 
 import java.time.{LocalDate, LocalDateTime}
-import scala.util.{Success, Failure}
-import scalikejdbc.jsr310.Implicits._
-import scalikejdbc._
+
+import scala.util.{ Success, Failure }
+
 import sample._
 import sample.context._
 import sample.context.orm.SkinnyORMMapper
 import sample.model.BusinessDayHandler
-import sample.util._
 import sample.model.account.FiAccount
 import sample.model.master.SelfFiAccount
+import sample.util._
+import scalikejdbc._
+import scalikejdbc.jsr310.Implicits._
 
 /**
  * 振込入出金依頼を表現するキャッシュフローアクション。
@@ -63,7 +65,7 @@ case class CashInOut(
        .verify(dh.time.tp.afterEqualsDay(eventDay), "error.CashInOut.afterEqualsDay")
     ) match {
       case Success(v) =>
-        Cashflow.updateById(id).withAttributes(
+        CashInOut.updateById(id).withAttributes(
           'statusType -> ActionStatusType.PROCESSED.value,
           'cashflowId -> Some(Cashflow.register(regCf)))
         id
@@ -88,7 +90,7 @@ case class CashInOut(
        .verify(dh.time.tp.beforeDay(eventDay), "error.CashInOut.beforeEqualsDay")
     ) match {
       case Success(v) =>
-        Cashflow.updateById(id).withAttributes(
+        CashInOut.updateById(id).withAttributes(
           'statusType -> ActionStatusType.CANCELLED.value)
       case Failure(e) => throw e
     }
@@ -103,7 +105,7 @@ case class CashInOut(
       v.verify(statusType.isUnprocessed, "error.ActionStatusType.unprocessing")
     ) match {
       case Success(v) =>
-        Cashflow.updateById(id).withAttributes(
+        CashInOut.updateById(id).withAttributes(
           'statusType -> ActionStatusType.ERROR.value)
       case Failure(e) => throw e
     }

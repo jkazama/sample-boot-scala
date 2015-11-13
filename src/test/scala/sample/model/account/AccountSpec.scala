@@ -1,11 +1,12 @@
 package sample.model.account
 
-import sample.UnitSpecSupport
-import sample.model.DataFixtures
-import scala.util.{Failure, Success, Try}
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import scala.util.{ Failure, Success, Try }
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
+import sample._
+import sample.model.DataFixtures
 
 @RunWith(classOf[JUnitRunner])
 class AccountSpec extends UnitSpecSupport {

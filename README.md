@@ -1,17 +1,15 @@
 sample-boot-scala
 ---
 
-> 現在ドメイン処理を作成中です、、
-
 ### はじめに
 
-[Spring Boot](http://projects.spring.io/spring-boot/) / [Spring Security](http://projects.spring.io/spring-security/) / [Scala](http://www.scala-lang.org/) を元にしたサンプル実装です。  
-ベーシックな基盤は[sample-boot-hibernate](https://github.com/jkazama/sample-boot-hibernate)から流用しています。  
+[Spring Boot](http://projects.spring.io/spring-boot/) / [Spring Security](http://projects.spring.io/spring-security/) / [Scala](http://www.scala-lang.org/) / [Skinny ORM](http://skinny-framework.org/documentation/orm.html) を元にしたサンプル実装です。  
+ベーシックな基盤は[sample-boot-hibernate](https://github.com/jkazama/sample-boot-hibernate)を参考にしています。  
 フレームワークではないのでプロジェクトを立ち上げる際に元テンプレートとして利用して下さい。
 
 UI側の実装サンプルについては[sample-ui-vue](https://github.com/jkazama/sample-ui-vue) / [sample-ui-react](https://github.com/jkazama/sample-ui-react)を参照してください。
 
-> 本サンプルはあくまでSpring Bootの利用を前提としたScala実装です。純粋にScalaでの開発を行いたい方は素直に[SBT](http://www.scala-sbt.org/)と[Play Framework](https://www.playframework.com/)/[Skinny Framework](http://skinny-framework.org/)といったフレームワークを組み合わせて開発する事をオススメします。
+> 本サンプルはあくまでSpring Bootの利用を前提としたScala実装です。純粋にScalaでの開発を行いたい方は素直に[SBT](http://www.scala-sbt.org/)ベースで[Play Framework](https://www.playframework.com/) / [Skinny Framework](http://skinny-framework.org/)といったフレームワークを利用して開発する事をオススメします。
 
 ---
 
@@ -23,12 +21,12 @@ UI側の実装サンプルについては[sample-ui-vue](https://github.com/jkaz
 
 オーソドックスな三層モデルですが、横断的な解釈としてインフラ層を考えています。
 
-| レイヤ          | 特徴                                                        |
+| レイヤ           | 特徴                                                        |
 | -------------- | ----------------------------------------------------------- |
-| UI             | ユースケース処理を公開(必要に応じてリモーティングや外部サイトを連携) |
-| アプリケーション | ユースケース処理を集約(外部リソースアクセスも含む)                 |
-| ドメイン        | 純粋なドメイン処理(外部リソースに依存しない)                      |
-| インフラ        | DIコンテナやORM、各種ライブラリ、メッセージリソースの提供          |
+| UI             | ユースケース処理を公開(必要に応じてリモーティングや外部サイトを連携)          |
+| アプリケーション     | ユースケース処理を集約(外部リソースアクセスも含む)                       |
+| ドメイン          | 純粋なドメイン処理(外部リソースに依存しない)                           |
+| インフラ          | DIコンテナやORM、各種ライブラリ、メッセージリソースの提供                    |
 
 UI層の公開処理はRESTfulAPIでのAPI提供のみをおこないます。(利用クライアントは別途用意する必要があります)
 
@@ -95,7 +93,8 @@ TBD
 開発IDEである[Eclipse](https://eclipse.org/)で本サンプルを利用するには、事前に以下の手順を行っておく必要があります。
 
 - JDK8以上のインストール
-- Gradle Plugin (Pivotal) のインストール
+- Gradle Plugin (`Pivotal`) のインストール
+    - Eclipse に同梱されている方のプラグインではないので注意してください
 - Scala IDE のインストール
     - ダウンロードに失敗する時はローカルにupdatesiteのファイルをダウンロードして更新してください。
 
@@ -124,7 +123,7 @@ Windows/Macのコンソールから実行するにはGradleのコンソールコ
 
 #### クライアント検証
 
-Eclipseまたはコンソールでサーバを立ち上げた後、testパッケージ配下にある`SampleClient`の各検証メソッドをユニットテストで実行してください。
+Eclipseまたはコンソールでサーバを立ち上げた後、testパッケージ配下にある`sample.client.SampleClient`の各検証メソッドをユニットテストで実行してください。
 
 ##### 顧客向けユースケース
 
@@ -155,7 +154,7 @@ Eclipseまたはコンソールでサーバを立ち上げた後、testパッケ
 
 ### 配布用jarの作成
 
-Spring BootではFat Jar(ライブラリなども内包するjar)を作成する事で単一の配布ファイルでアプリケーションを実行することができます。
+Spring BootではExecutable Jar(ライブラリなども内包する実行可能jar)を作成する事で単一の配布ファイルでアプリケーションを実行することができます。
 
 1. コンソールから「gradlew build」を実行
 1. `build/libs`直下にjarが出力されるのでJava8以降の実行環境へ配布
@@ -181,7 +180,7 @@ TBD Scalaブリッジライブラリの記載追加
 
 インフラ層の簡単な解説です。
 
-*※細かい概要は実際にコードを読むか、「`gradlew javadoc`」を実行して「`build/docs`」に出力されるドキュメントを参照してください*
+*※細かい概要は実際にコードを読むか、「`gradlew scaladoc`」を実行して「`build/docs`」に出力されるドキュメントを参照してください*
 
 #### DB/トランザクション
 
@@ -202,6 +201,7 @@ TODO Skinny ORM の利用方針に触れる
 
 汎用概念としてフィールド単位にスタックした例外を持つ`ValidationException`を提供します。  
 例外は末端のUI層でまとめて処理します。具体的にはアプリケーション層、ドメイン層では用途別の実行時例外をそのまま上位に投げるだけとし、例外捕捉は`sample.context.rest`直下のコンポーネントにおいてAOPを用いた暗黙的差し込みを行います。
+※EitherをI/Fに用意するプログラマティックなアプローチはとらずにJava風味で。
 
 #### 日付/日時
 

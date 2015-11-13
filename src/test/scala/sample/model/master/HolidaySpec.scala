@@ -1,9 +1,11 @@
 package sample.model.master
 
+import java.time.LocalDate
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import java.time.LocalDate
-import sample.UnitSpecSupport
+
+import sample._
 
 @RunWith(classOf[JUnitRunner])
 class HolidaySpec extends UnitSpecSupport {

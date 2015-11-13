@@ -1,8 +1,8 @@
 package sample.context.orm
 
-import org.scalatest.ShouldMatchers
-import org.scalatest.WordSpec
 import org.junit.runner.RunWith
+
+import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])

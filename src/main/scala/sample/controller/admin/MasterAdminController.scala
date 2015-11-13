@@ -1,17 +1,20 @@
 package sample.controller.admin
 
 import java.time.LocalDate
-import javax.validation.Valid
+
 import scala.beans.BeanInfo
-import org.springframework.web.bind.annotation._
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation._
+
+import javax.validation.Valid
 import sample._
 import sample.context.security._
+import sample.controller.ControllerSupport
 import sample.model.constraints._
 import sample.model.master._
 import sample.usecase.MasterAdminService
-import sample.controller.ControllerSupport
 
 /**
  * マスタに関わる社内のUI要求を処理します。
@@ -41,7 +44,7 @@ class MasterAdminController extends ControllerSupport {
   /** 休日を登録します。 */
   @RequestMapping(value = Array("/holiday/"), method = Array(RequestMethod.POST))
   def registerHoliday(@Valid p: RegHolidayParam): ResponseEntity[Void] =
-    resultEmpty(() => service.registerHoliday(p.convert))
+    resultEmpty(service.registerHoliday(p.convert))
 }
 
 /** クライアント利用用途に絞ったパラメタ */

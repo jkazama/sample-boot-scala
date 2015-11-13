@@ -1,9 +1,11 @@
 package sample.util
 
+import org.junit.runner.RunWith
+
 import org.scalatest.ShouldMatchers
 import org.scalatest.WordSpec
-import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
 import ConvertUtils._
 
 @RunWith(classOf[JUnitRunner])

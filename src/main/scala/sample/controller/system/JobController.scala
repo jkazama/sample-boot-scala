@@ -2,12 +2,10 @@ package sample.controller.system
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation._
+
 import sample.controller.ControllerSupport
-import sample.usecase.AssetAdminService
-import sample.usecase.SystemAdminService
+import sample.usecase._
 
 /**
  * システムジョブのUI要求を処理します。
@@ -27,16 +25,16 @@ class JobController extends ControllerSupport {
   /** 営業日を進めます。 */
   @RequestMapping(value = Array("/daily/processDay"), method = Array(RequestMethod.POST))
   def processDay(): ResponseEntity[Void] =
-    resultEmpty(() => system.processDay())
+    resultEmpty(system.processDay())
   
   /** 振込出金依頼を締めます。 */
   @RequestMapping(value = Array("/daily/closingCashOut"),  method = Array(RequestMethod.POST))
   def closingCashOut(): ResponseEntity[Void] =
-    resultEmpty(() => asset.closingCashOut())
+    resultEmpty(asset.closingCashOut())
 
   /** キャッシュフローを実現します。 */
   @RequestMapping(value = Array("/daily/realizeCashflow"),  method = Array(RequestMethod.POST))
   def realizeCashflow(): ResponseEntity[Void] =
-    resultEmpty(() => asset.realizeCashflow())
+    resultEmpty(asset.realizeCashflow())
 
 }

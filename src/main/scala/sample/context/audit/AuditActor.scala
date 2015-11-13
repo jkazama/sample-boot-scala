@@ -1,14 +1,16 @@
 package sample.context.audit
 
-import java.time.{LocalDateTime, LocalDate, ZoneId}
+import java.time.{ LocalDateTime, LocalDate }
+
 import org.apache.commons.lang3.StringUtils
-import scalikejdbc.jsr310.Implicits._
-import scalikejdbc._
+
 import sample._
 import sample.context._
-import sample.context.actor.{Actor, ActorRoleType}
+import sample.context.actor.ActorRoleType
 import sample.context.orm._
 import sample.util._
+import scalikejdbc._
+import scalikejdbc.jsr310.Implicits._
 
 /**
  * システム利用者の監査ログを表現します。

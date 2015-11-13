@@ -1,17 +1,20 @@
 package sample
 
 import java.time.Clock
+
 import org.scalatest._
 import org.scalatest.fixture.FlatSpec
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import scalikejdbc.scalatest.AutoRollback
+
 import sample.context._
 import sample.context.actor.ActorSession
 import sample.context.orm.SkinnyOrm
 import sample.model._
+import scalikejdbc._
+import scalikejdbc.scalatest.AutoRollback
 
-trait UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter with ShouldMatchers {
+abstract class UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter with ShouldMatchers {
 
   val clock: Clock = Clock.systemDefaultZone()
   
@@ -34,7 +37,9 @@ trait UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter wit
   before {
     orm.initialize()
     DataFixtures.executeDdl()
+    DB.localTx(postBefore(_))
   }
+  protected def postBefore: DBSession => Any = {implicit s: DBSession => Unit}
 
   after {
 //    orm.destroy()

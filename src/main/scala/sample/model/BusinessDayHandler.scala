@@ -1,14 +1,16 @@
 package sample.model
 
 import java.time.LocalDate
-import org.springframework.stereotype.Component
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Lazy
-import scalikejdbc._
+import org.springframework.stereotype.Component
+
 import sample.context._
-import sample.util.DateUtils
 import sample.model.master._
+import sample.util.DateUtils
+import scalikejdbc._
 
 /**
  * ドメインに依存する営業日関連のユーティリティハンドラ。

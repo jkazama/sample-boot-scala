@@ -1,20 +1,20 @@
 package sample
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.actuate.health._
+import org.springframework.boot.actuate.health.Health.Builder
 import org.springframework.context.MessageSource
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation._
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
 import sample.context.Timestamper
-import org.springframework.boot.actuate.health.HealthIndicator
 import sample.model.BusinessDayHandler
-import org.springframework.boot.actuate.health.AbstractHealthIndicator
-import org.springframework.boot.actuate.health.Health.Builder
 
 /**
  * アプリケーションにおけるBean定義を表現します。

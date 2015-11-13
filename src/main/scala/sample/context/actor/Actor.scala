@@ -1,7 +1,9 @@
 package sample.context.actor
 
 import java.util.Locale
+
 import com.fasterxml.jackson.annotation.JsonValue
+
 import sample.context.{Dto, Enums, EnumSealed}
 
 /** ユースケースにおける利用者を表現します。 */

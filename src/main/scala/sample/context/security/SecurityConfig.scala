@@ -3,15 +3,12 @@ package sample.context.security
 import scala.beans.BeanInfo
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.boot.context.properties._
+import org.springframework.context.annotation._
 import org.springframework.core.annotation.Order
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.cors._
 import org.springframework.web.filter.CorsFilter
 
 /**

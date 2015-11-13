@@ -1,23 +1,19 @@
 package sample.controller
 
+import java.time._
+
 import scala.beans.BeanInfo
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
-import sample.model.constraints.AbsAmount
-import sample.model.constraints.Name
+import scala.math.BigDecimal.javaBigDecimal2bigDecimal
+
 import org.springframework.beans.factory.annotation.Autowired
-import sample.usecase.AssetService
-import sample.model.asset.CashInOut
-import java.time.LocalDate
-import java.time.LocalDateTime
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation._
+
+import javax.validation.Valid
 import sample.ActionStatusType
-import org.springframework.web.bind.annotation.RequestMethod
-import sample.model.constraints.Currency
-import sample.model.constraints.IdStr
-import sample.model.asset.RegCashOut
-import sample.model.asset.RegCashOut
+import sample.model.asset._
+import sample.model.constraints._
+import sample.usecase.AssetService
 
 /**
  * 資産に関わる顧客のUI要求を処理します。
@@ -41,7 +37,7 @@ class AssetController extends ControllerSupport {
    */
   @RequestMapping(value = Array("/cio/withdraw"), method = Array(RequestMethod.POST))
   def withdraw(@Valid p: RegCashOutParam): ResponseEntity[Long] =
-    result(() => service.withdraw(p.convert))
+    result(service.withdraw(p.convert))
 
 }
 

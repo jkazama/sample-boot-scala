@@ -1,12 +1,15 @@
 package sample.context.audit
 
-import java.time.{ LocalDateTime, LocalDate, ZoneId }
+import java.time.{ LocalDateTime, LocalDate }
+
 import org.apache.commons.lang3.StringUtils
-import scalikejdbc._
+
 import sample._
 import sample.context._
 import sample.context.orm._
 import sample.util._
+import scalikejdbc.jsr310.Implicits._
+import scalikejdbc._
 
 /**
  * システムイベントの監査ログを表現します。
@@ -47,16 +50,13 @@ object AuditEvent extends AuditEventMapper {
       )), p.page)
   }
   
-  /** 利用者監査ログを登録します。 */
+  /** イベント監査ログを登録します。 */
   def register(p: RegAuditEvent)(implicit session: DBSession = autoSession, dh: DomainHelper): Long =
-    Some(dh.actor).map(actor =>
-      AuditEvent.createWithAttributes(
-        'source -> actor.source,
-        'category -> p.category,
-        'message -> ConvertUtils.left(p.message, 300),
-        'statusType -> ActionStatusType.PROCESSING.value,
-        'startDate -> dh.time.date)
-    ).get
+    AuditEvent.createWithAttributes(
+      'category -> p.category,
+      'message -> ConvertUtils.left(p.message, 300),
+      'statusType -> ActionStatusType.PROCESSING.value,
+      'startDate -> dh.time.date)
     
   /** 利用者監査ログを完了状態にします。 */
   def finish(id: Long)(implicit session: DBSession = autoSession, dh: DomainHelper): Unit = {
@@ -99,8 +99,8 @@ trait AuditEventMapper extends SkinnyORMMapper[AuditEvent] {
       statusType = ActionStatusType.withName(rs.string(n.statusType)),
       errorReason = rs.stringOpt(n.errorReason),
       time = rs.longOpt(n.time),
-      startDate = LocalDateTime.from(rs.date(n.startDate).toInstant()),
-      endDate = rs.dateOpt(n.endDate).map(d => LocalDateTime.from(d.toInstant())))
+      startDate = rs.localDateTime(n.startDate),
+      endDate = rs.localDateTimeOpt(n.endDate))
 }
 
 /** 検索パラメタ */

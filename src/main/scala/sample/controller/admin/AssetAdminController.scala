@@ -6,15 +6,14 @@ import scala.beans.BeanInfo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation._
 
 import javax.validation.Valid
 import sample._
-import sample.model.constraints._
-import sample.model.asset._
-import sample.usecase.AssetAdminService
 import sample.controller.ControllerSupport
+import sample.model.asset._
+import sample.model.constraints._
+import sample.usecase.AssetAdminService
 
 /**
  * 資産に関わる社内のUI要求を処理します。

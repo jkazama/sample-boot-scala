@@ -1,9 +1,11 @@
 package sample.context.audit
 
-import sample.UnitSpecSupport
+import java.time.LocalDate
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import java.time.LocalDate
+
+import sample._
 import sample.context.actor.ActorRoleType
 
 @RunWith(classOf[JUnitRunner])

@@ -1,17 +1,16 @@
 package sample.context.audit
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{ Try, Success, Failure }
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import scalikejdbc._
-
 import sample._
 import sample.context._
 import sample.context.actor.ActorSession
+import scalikejdbc._
 
 /**
  * 利用者監査やシステム監査(定時バッチや日次バッチ等)などを取り扱います。
@@ -31,9 +30,9 @@ class AuditHandler {
   private var persister: AuditPersister = _
 
   /** 与えた処理に対し、監査ログを記録します。 */
-  def audit[T](message: String, callable: () => T): T =
+  def audit[T](message: String, callable: => T): T =
     audit("default", message, callable)
-  def audit[T](category: String, message: String, callable: () => T): T = {
+  def audit[T](category: String, message: String, callable: => T): T = {
     logger.trace(msg(message, "[開始]"))
     val start = System.currentTimeMillis()
     try {
@@ -70,14 +69,14 @@ class AuditHandler {
     return sb.toString()
   }
 
-  def callAudit[T](category: String, message: String, callable: () => T): T = {
+  def callAudit[T](category: String, message: String, callable: => T): T = {
     var id: Option[Long] = Option.empty
     try {
       Try(id = Option(persister.startActor(RegAuditActor(category, message)))) match {
         case Success(v) => // nothing
         case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
       }
-      callable()
+      callable
     } catch {
       case e: ValidationException =>
         Try(id.map(persister.cancelActor(_, e.getMessage))) match {
@@ -94,14 +93,14 @@ class AuditHandler {
     }    
   }
   
-  def callEvent[T](category: String, message: String, callable: () => T): T = {
+  def callEvent[T](category: String, message: String, callable: => T): T = {
     var id: Option[Long] = Option.empty
     try {
       Try(id = Option(persister.startEvent(RegAuditEvent(category, message)))) match {
         case Success(v) => // nothing
         case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
       }
-      callable()
+      callable
     } catch {
       case e: ValidationException =>
         Try(id.map(persister.cancelEvent(_, e.getMessage))) match {

@@ -1,8 +1,8 @@
 package sample.util
 
-import com.ibm.icu.text.Transliterator
-import org.apache.commons.lang3.StringUtils
 import scala.util.control.Breaks
+
+import com.ibm.icu.text.Transliterator
 
 /** 各種型/文字列変換をサポートします。(ICU4Jライブラリに依存しています) */
 trait ConvertUtils {

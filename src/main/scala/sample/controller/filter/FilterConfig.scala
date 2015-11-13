@@ -1,8 +1,9 @@
 package sample.controller.filter
 
 import org.springframework.context.annotation.Configuration
-import sample.context.security.SecurityFilters
+
 import javax.servlet.Filter
+import sample.context.security.SecurityFilters
 
 /**
  * ServletFilterの拡張実装。

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component
 import com.fasterxml.jackson.annotation.JsonValue
 
 import sample.InvocationException
-import sample.context.EnumSealed
-import sample.context.Enums
+import sample.context._
 
 /**
  * ID単位のロックを表現します。
@@ -21,14 +20,14 @@ class IdLockHandler {
     scala.collection.mutable.Map()
 
   /** IDロック上で処理を実行します。 */
-  def call[T](id: String, lockType: LockType, callable: () => T): T = {
+  def call[T](id: String, lockType: LockType, callable: => T): T = {
     if (lockType.isWrite) {
       writeLock(id)
     } else {
       readLock(id)
     }
     try {
-      callable()
+      callable
     } catch {
       case e: RuntimeException => throw e
       case e: Exception => throw InvocationException("error.Exception", e);

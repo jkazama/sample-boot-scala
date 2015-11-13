@@ -1,10 +1,11 @@
 package sample.model.asset
 
 import java.time.LocalDate
-import scalikejdbc.jsr310.Implicits._
-import scalikejdbc._
+
 import sample.context._
 import sample.util.Calculator
+import scalikejdbc._
+import scalikejdbc.jsr310.Implicits._
 
 /**
  * 口座の資産概念を表現します。

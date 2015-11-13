@@ -1,7 +1,9 @@
 package sample.usecase
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{ Try, Success, Failure }
+
 import org.springframework.stereotype.Service
+
 import sample.context.lock.LockType
 import sample.model.asset._
 
@@ -22,11 +24,11 @@ class AssetAdminService extends ServiceSupport {
    * 振込出金依頼を締めます。
    */
   def closingCashOut(): Unit =
-    audit.audit("振込出金依頼の締め処理をする", () =>
+    audit.audit("振込出金依頼の締め処理をする",
       tx(implicit session =>
         //low: 以降の処理は口座単位でfilter束ねしてから実行する方が望ましい。
         CashInOut.findUnprocessed.foreach(cio =>
-          idLock.call(cio.accountId, LockType.WRITE, () =>
+          idLock.call(cio.accountId, LockType.WRITE,
             Try(cio.process()) match {
               case Success(v) => // nothing.
               case Failure(e) =>
@@ -46,11 +48,11 @@ class AssetAdminService extends ServiceSupport {
    * <p>受渡日を迎えたキャッシュフローを残高に反映します。
    */
   def realizeCashflow(): Unit =
-    audit.audit("キャッシュフローを実現する", () =>
+    audit.audit("キャッシュフローを実現する",
       tx(implicit session =>
         //low: 日回し後の実行を想定
         Cashflow.findDoRealize(dh.time.day).foreach(cf =>
-          idLock.call(cf.accountId, LockType.WRITE, () =>
+          idLock.call(cf.accountId, LockType.WRITE,
             Try(cf.realize()) match {
               case Success(v) => // nothing.
               case Failure(e) =>

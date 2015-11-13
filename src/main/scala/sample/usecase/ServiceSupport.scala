@@ -1,16 +1,18 @@
 package sample.usecase
 
+import org.slf4j.LoggerFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import scalikejdbc._
+
 import sample.context._
 import sample.context.actor.Actor
 import sample.context.audit.AuditHandler
 import sample.context.lock._
 import sample.model.BusinessDayHandler
-import sample.usecase.report.ServiceReportExporter
 import sample.usecase.mail.ServiceMailDeliver
-import org.slf4j.LoggerFactory
+import sample.usecase.report.ServiceReportExporter
+import scalikejdbc._
 
 /**
  * ユースケースサービスの基底クラス。
@@ -43,7 +45,7 @@ trait ServiceSupport {
 
   /** 口座ロック付でトランザクション処理を実行します。 */
   protected def tx[T](accountId: String, lockType: LockType, callable: DBSession => T): T =
-    idLock.call(accountId, lockType, () => tx(implicit s => callable(s)))
+    idLock.call(accountId, lockType, tx(implicit s => callable(s)))
 
   /** i18nメッセージ変換を行います。 */
   protected def msg(message: String): String =

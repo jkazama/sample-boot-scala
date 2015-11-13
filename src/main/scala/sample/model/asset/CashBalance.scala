@@ -1,15 +1,15 @@
 package sample.model.asset
 
-import sample.context.Entity
+import java.time.{LocalDate, LocalDateTime}
 import java.util.Currency
-import java.time.LocalDate
-import java.time.LocalDateTime
-import sample.util.Calculator
+
+import scala.math.BigDecimal.RoundingMode
+
+import sample.context._
 import sample.context.orm.SkinnyORMMapper
-import sample.context.DomainHelper
+import sample.util.Calculator
 import scalikejdbc.jsr310._
 import scalikejdbc._
-import scala.math.BigDecimal.RoundingMode
 
 /**
  * 口座残高を表現します。
@@ -79,5 +79,4 @@ object CashBalance extends SkinnyORMMapper[CashBalance] {
       'currency -> currency,
       'amount -> amount,
       'updateDate -> dh.time.date)
- 
-}
+ }

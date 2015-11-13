@@ -1,7 +1,9 @@
 package sample.controller
 
-import org.springframework.web.bind.annotation._
 import org.springframework.beans.factory.annotation.Autowired
+
+import org.springframework.web.bind.annotation._
+
 import sample._
 import sample.context.security._
 import sample.usecase.AccountService

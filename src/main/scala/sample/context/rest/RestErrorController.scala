@@ -1,9 +1,7 @@
 package sample.context.rest
 
-import org.springframework.boot.autoconfigure.web.ErrorAttributes
-import org.springframework.boot.autoconfigure.web.ErrorController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.boot.autoconfigure.web._
+import org.springframework.web.bind.annotation._
 import org.springframework.web.context.request.ServletRequestAttributes
 
 import javax.servlet.http.HttpServletRequest

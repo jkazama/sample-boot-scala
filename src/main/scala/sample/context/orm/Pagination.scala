@@ -1,7 +1,7 @@
 package sample.context.orm
 
-import scala.math.BigDecimal.RoundingMode
 import scala.math.BigDecimal._
+import scala.math.BigDecimal.RoundingMode
 
 import sample.context.Dto
 import sample.util.Calculator

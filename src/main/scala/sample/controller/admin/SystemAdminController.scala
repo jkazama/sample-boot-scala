@@ -1,21 +1,23 @@
 package sample.controller.admin
 
 import java.time.LocalDate
+
+import scala.beans.BeanInfo
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation._
+
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
-import scala.beans.BeanInfo
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation._
 import sample._
+import sample.context._
 import sample.context.actor._
 import sample.context.audit._
 import sample.context.orm.PagingList
+import sample.controller._
 import sample.model.constraints._
 import sample.usecase.SystemAdminService
-import sample.controller._
-import sample.context.AppSetting
-import sample.context.FindAppSetting
-import org.springframework.http.ResponseEntity
 
 /**
  * システムに関わる社内のUI要求を処理します。
@@ -45,7 +47,7 @@ class SystemAdminController extends ControllerSupport {
   /** アプリケーション設定情報を変更します。 */
   @RequestMapping(value = Array("/setting/{id}"), method = Array(RequestMethod.POST))
   def changeAppSetting(@PathVariable id: String, value: String): ResponseEntity[Void] =
-    resultEmpty(() => service.changeAppSetting(id, value))
+    resultEmpty(service.changeAppSetting(id, value))
 }
 
 /** FindAuditActorのUI変換パラメタ */

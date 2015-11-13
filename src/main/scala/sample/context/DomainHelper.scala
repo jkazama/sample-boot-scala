@@ -1,8 +1,8 @@
 package sample.context
 
-import scala.beans.BeanInfo
-import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
 import sample.context.actor.{Actor, ActorSession}
 
 /**

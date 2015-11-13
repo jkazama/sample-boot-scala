@@ -1,10 +1,10 @@
 package sample.util
 
+import scala.math.BigDecimal.RoundingMode
+
 import org.junit.runner.RunWith
 import org.scalatest.{WordSpec, ShouldMatchers}
 import org.scalatest.junit.JUnitRunner
-
-import scala.math.BigDecimal.RoundingMode
 
 @RunWith(classOf[JUnitRunner])
 class CalculatorSpec extends WordSpec with ShouldMatchers {

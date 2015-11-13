@@ -1,6 +1,7 @@
 package sample
 
 import com.fasterxml.jackson.annotation.JsonValue
+
 import sample.context.Enums
 
 /**

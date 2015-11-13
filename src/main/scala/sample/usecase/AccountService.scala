@@ -2,9 +2,8 @@ package sample.usecase
 
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
-import sample.model.account.Login
-import scalikejdbc.DBSession
-import sample.model.account.Account
+
+import sample.model.account._
 
 /**
  * 口座ドメインに対する顧客ユースケース処理。

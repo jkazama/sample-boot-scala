@@ -1,6 +1,7 @@
 package sample.usecase.job
 
 import org.springframework.stereotype.Component
+
 import scalikejdbc._
 
 /**

@@ -1,9 +1,10 @@
 package sample.usecase
 
 import org.springframework.stereotype.Service
+
 import sample.context.actor.Actor
-import sample.model.asset._
 import sample.context.lock.LockType
+import sample.model.asset._
 
 /**
  * 資産ドメインに対する顧客ユースケース処理。
@@ -16,7 +17,6 @@ class AssetService extends ServiceSupport {
   
   /**
    * 未処理の振込依頼情報を検索します。
-   * low: 参照系は口座ロックが必要無いケースであれば@Transactionalでも十分
    * low: CashInOutは情報過多ですがアプリケーション層では公開対象を特定しにくい事もあり、
    * UI層に最終判断を委ねています。
    */
@@ -33,7 +33,7 @@ class AssetService extends ServiceSupport {
    * @return 振込出金依頼ID
    */
   def withdraw(p: RegCashOut): Long =
-    audit.audit("振込出金依頼をします", () => {
+    audit.audit("振込出金依頼をします", {
       // 顧客側はログイン利用者で強制上書きして振替
       val cio = tx(actor.id, LockType.WRITE, {implicit session =>
         CashInOut.load(CashInOut.withdraw(businessDay, p.copy(accountId = Some(actor.id))))
