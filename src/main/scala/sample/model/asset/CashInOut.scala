@@ -1,9 +1,7 @@
 package sample.model.asset
 
 import java.time.{LocalDate, LocalDateTime}
-
 import scala.util.{ Success, Failure }
-
 import sample._
 import sample.context._
 import sample.context.orm.SkinnyORMMapper
@@ -13,6 +11,7 @@ import sample.model.master.SelfFiAccount
 import sample.util._
 import scalikejdbc._
 import scalikejdbc.jsr310.Implicits._
+import sample.model.DomainErrorKeys
 
 /**
  * 振込入出金依頼を表現するキャッシュフローアクション。
@@ -61,8 +60,8 @@ case class CashInOut(
    */
   def process()(implicit s: DBSession, dh: DomainHelper): Long =
     Validator.validateTry(v =>
-      v.verify(statusType.isUnprocessed, "error.ActionStatusType.unprocessing")
-       .verify(dh.time.tp.afterEqualsDay(eventDay), "error.CashInOut.afterEqualsDay")
+      v.verify(statusType.isUnprocessed, ErrorKeys.ActionUnprocessing)
+       .verify(dh.time.tp.afterEqualsDay(eventDay), AssetErrorKeys.CashInOutAfterEqualsDay)
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
@@ -86,8 +85,8 @@ case class CashInOut(
    */
   def cancel()(implicit s: DBSession, dh: DomainHelper): Unit =
     Validator.validateTry(v =>
-      v.verify(statusType.isUnprocessing, "error.ActionStatusType.unprocessing")
-       .verify(dh.time.tp.beforeDay(eventDay), "error.CashInOut.beforeEqualsDay")
+      v.verify(statusType.isUnprocessing, ErrorKeys.ActionUnprocessing)
+       .verify(dh.time.tp.beforeDay(eventDay), AssetErrorKeys.CashInOutBeforeEqualsDay)
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
@@ -102,7 +101,7 @@ case class CashInOut(
    */
   def error()(implicit s: DBSession, dh: DomainHelper): Unit =
     Validator.validateTry(v =>
-      v.verify(statusType.isUnprocessed, "error.ActionStatusType.unprocessing")
+      v.verify(statusType.isUnprocessed, ErrorKeys.ActionUnprocessing)
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
@@ -167,9 +166,9 @@ object CashInOut extends CashInOutMapper {
     val valueDay = businessDay.day(3)
     // 事前審査
     Validator.validateTry(v => {
-      v.verifyField(0 < p.absAmount.signum, "absAmount", "error.domain.AbsAmount.zero")
+      v.verifyField(0 < p.absAmount.signum, "absAmount", DomainErrorKeys.AbsAmountZero)
       v.verifyField(canWithdraw(accountId, p.currency, p.absAmount, valueDay),
-         "absAmount", "error.CashInOut.withdrawAmount")
+         "absAmount", AssetErrorKeys.CashInOutWithdrawAmount)
     }) match {
       case Success(v) =>
         // 出金依頼情報を登録
