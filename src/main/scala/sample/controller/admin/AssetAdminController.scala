@@ -3,6 +3,7 @@ package sample.controller.admin
 import java.time.LocalDate
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -35,11 +36,15 @@ class AssetAdminController extends ControllerSupport {
 @BeanInfo
 class FindCashInOutParam {
   @CurrencyEmpty
+  @BeanProperty
   var currency: String = _
+  @BeanProperty
   var statusTypes: Array[String] = Array()
   @ISODate
+  @BeanProperty
   var updFromDay: LocalDate = _
   @ISODate
+  @BeanProperty
   var updToDay: LocalDate = _
   def convert: FindCashInOut =
     FindCashInOut(
