@@ -48,8 +48,8 @@ case class Cashflow(
   /** キャッシュフローを処理済みにして残高へ反映します。 */
   def realize()(implicit s: DBSession, dh: DomainHelper): Long =
     Validator.validateTry(v =>
-      v.verify(canRealize, "error.Cashflow.realizeDay")
-       .verify(statusType.isUnprocessing, "error.ActionStatusType.unprocessing")
+      v.verify(canRealize, AssetErrorKeys.CashflowRealizeDay)
+       .verify(statusType.isUnprocessing, ErrorKeys.ActionUnprocessing)
     ) match {
       case Success(v) =>
         Cashflow.updateById(id).withAttributes(
@@ -66,7 +66,7 @@ case class Cashflow(
    */
   def error()(implicit s: DBSession, dh: DomainHelper): Unit =
     Validator.validateTry(v =>
-      v.verify(statusType.isUnprocessed, "error.ActionStatusType.unprocessing")
+      v.verify(statusType.isUnprocessed, ErrorKeys.ActionUnprocessing)
     ) match {
       case Success(v) =>
         Cashflow.updateById(id).withAttributes(
@@ -107,7 +107,7 @@ object Cashflow extends CashflowMapper {
    */
   def register(p: RegCashflow)(implicit s: DBSession, dh: DomainHelper): Long =
     Validator.validateTry(v =>
-      v.checkField(dh.time.tp.beforeEqualsDay(p.valueDay), "valueDay", "error.Cashflow.beforeEqualsDay")
+      v.checkField(dh.time.tp.beforeEqualsDay(p.valueDay), "valueDay", AssetErrorKeys.CashflowBeforeEqualsDay)
     ) match {
       case Success(v) =>
         create(p).map(cf => if (cf.canRealize) cf.realize() else cf.id).get

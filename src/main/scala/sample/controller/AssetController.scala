@@ -3,7 +3,7 @@ package sample.controller
 import java.time._
 
 import scala.beans.BeanInfo
-import scala.math.BigDecimal.javaBigDecimal2bigDecimal
+import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -56,12 +56,16 @@ object CashOutUI {
  * low: SpringMVCで引数に利用するDtoはJavaBeansの仕様を満たす必要があるため、
  * 別途詰め替えクラスを用意する必要があります。(取りまとめてtraitなどで分離すると保守性が上がります)
  * ※戻り値で利用するEntity/DTOには必要ありません。
+ * ※本来BeanPropertyの付与は必要ありませんが、Spring Boot 1.3.RELEASE時点で適切なバインドが
+ * されない事が確認されたため明示的に付与しています。
  */
 @BeanInfo
 class RegCashOutParam {
   @Currency
+  @BeanProperty
   var currency: String = _
   @AbsAmount
+  @BeanProperty
   var absAmount: java.math.BigDecimal = _
   def convert: RegCashOut = RegCashOut(None, currency, absAmount)
 }

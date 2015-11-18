@@ -4,6 +4,7 @@ import java.net.URLEncoder
 import java.util.Locale
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 import scala.collection.JavaConversions._
 import scala.util.{ Try, Success, Failure }
 
@@ -93,21 +94,29 @@ class ControllerSupport {
 /** ページング系のUI変換パラメタ */
 @BeanInfo
 class PaginationParam {
+  @BeanProperty
   var page: Int = 1
+  @BeanProperty
   var size: Int = Pagination.defaultSize
+  @BeanProperty
   var total: Long = _
+  @BeanProperty
   var ignoreTotal: Boolean = _
+  @BeanProperty
   var sort: SortParam = new SortParam()
   def convert: Pagination = Pagination(page, size, Option(total), ignoreTotal, Option(sort).map(_.convert))
 }
 @BeanInfo
 class SortParam {
+  @BeanProperty
   var orders: Array[SortOrderParam] = Array()
   def convert: Sort = Sort(if (orders != null) orders.map(_.convert) else Seq())
 }
 @BeanInfo
 class SortOrderParam {
+  @BeanProperty
   var property: String = _
+  @BeanProperty
   var ascending: Boolean = _
   def convert: SortOrder = SortOrder(property, ascending)
 }

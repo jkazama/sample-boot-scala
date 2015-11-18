@@ -2,7 +2,6 @@ package sample.context.security
 
 import java.util.Collection
 
-import scala.beans.BeanInfo
 import scala.collection.JavaConversions._
 
 import org.springframework.beans.factory.annotation.Autowired

@@ -23,7 +23,7 @@ class CashflowSpec extends UnitSpecSupport {
     Try(Cashflow.register(
         RegCashflow("test1", "JPY", BigDecimal("1000"), CashflowType.CashIn, "cashIn", None, baseMinus1Day))) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.Cashflow.beforeEqualsDay")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashflowBeforeEqualsDay)
     }
     // 翌日受渡でキャッシュフロー発生
     val cf = Cashflow.load(Cashflow.register(
@@ -44,7 +44,7 @@ class CashflowSpec extends UnitSpecSupport {
     // 未到来の受渡日 [例外]
     Try(saveCf("test1", "1000", baseDay, basePlus1Day).realize()) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.Cashflow.realizeDay")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashflowRealizeDay)
     }
     
     // キャッシュフローの残高反映検証。  0 + 1000 = 1000
@@ -59,7 +59,7 @@ class CashflowSpec extends UnitSpecSupport {
     // 処理済キャッシュフローの再実現 [例外]
     Try(Cashflow.load(cfNormalId).realize()) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.ActionStatusType.unprocessing")
+      case Failure(e) => e.getMessage should be (ErrorKeys.ActionUnprocessing)
     }
     
     // 過日キャッシュフローの残高反映検証。 1000 + 2000 = 3000

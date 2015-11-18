@@ -3,6 +3,7 @@ package sample.controller.admin
 import java.time.LocalDate
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -54,19 +55,27 @@ class SystemAdminController extends ControllerSupport {
 @BeanInfo
 class FindAuditActorParam {
   @IdStrEmpty
+  @BeanProperty
   var actorId: String = _
   @CategoryEmpty
+  @BeanProperty
   var category: String = _
   @DescriptionEmpty
+  @BeanProperty
   var keyword: String = _
   @NotNull
+  @BeanProperty
   var roleType: String = "USER"
+  @BeanProperty
   var statusType: String = _
   @ISODate
+  @BeanProperty
   var fromDay: LocalDate = _
   @ISODate
+  @BeanProperty
   var toDay: LocalDate = _
   @NotNull
+  @BeanProperty
   var page: PaginationParam = new PaginationParam()
   def convert: FindAuditActor =
     FindAuditActor(Option(actorId), Option(category), Option(keyword),
@@ -79,15 +88,21 @@ class FindAuditActorParam {
 @BeanInfo
 class FindAuditEventParam {
   @CategoryEmpty
+  @BeanProperty
   var category: String = _
   @DescriptionEmpty
+  @BeanProperty
   var keyword: String = _
+  @BeanProperty
   var statusType: String = _
   @ISODate
+  @BeanProperty
   var fromDay: LocalDate = _
   @ISODate
+  @BeanProperty
   var toDay: LocalDate = _
   @NotNull
+  @BeanProperty
   var page: PaginationParam = new PaginationParam()
   def convert: FindAuditEvent =
     FindAuditEvent(Option(category), Option(keyword),
@@ -99,6 +114,7 @@ class FindAuditEventParam {
 @BeanInfo
 class FindAppSettingParam {
   @DescriptionEmpty
+  @BeanProperty
   var keyword: String = _
   def convert: FindAppSetting = FindAppSetting(Option(keyword))
 }

@@ -1,18 +1,17 @@
 package sample.model.asset
 
 import java.time.LocalDate
-
 import scala.util.{ Try, Success, Failure }
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import sample.ActionStatusType
 import sample.UnitSpecSupport
 import sample.model.DataFixtures._
 import sample.model.account.AccountStatusType
 import sample.model.asset._
 import scalikejdbc._
+import sample.model.DomainErrorKeys
+import sample.ErrorKeys
 
 //low: 簡易な正常系検証が中心。依存するCashflow/CashBalanceの単体検証パスを前提。
 @RunWith(classOf[JUnitRunner])
@@ -50,12 +49,12 @@ class CashInOutSpec extends UnitSpecSupport {
     // 超過の出金依頼 [例外]
     Try(CashInOut.withdraw(businessDay, RegCashOut(Some(accId), ccy, BigDecimal("1001")))) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.CashInOut.withdrawAmount")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashInOutWithdrawAmount)
     }
     // 0円出金の出金依頼 [例外]
     Try(CashInOut.withdraw(businessDay, RegCashOut(Some(accId), ccy, BigDecimal("0")))) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.domain.AbsAmount.zero")
+      case Failure(e) => e.getMessage should be (DomainErrorKeys.AbsAmountZero)
     }
     // 通常の出金依頼
     val normal = CashInOut.load(
@@ -77,7 +76,7 @@ class CashInOutSpec extends UnitSpecSupport {
     // 拘束額を考慮した出金依頼 [例外]
     Try(CashInOut.withdraw(businessDay, RegCashOut(Some(accId), ccy, BigDecimal("701")))) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.CashInOut.withdrawAmount")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashInOutWithdrawAmount)
     }
   }
   
@@ -91,7 +90,7 @@ class CashInOutSpec extends UnitSpecSupport {
     val today = saveCio(businessDay, accId, "300", true, Some(businessDay.day))
     Try(today.cancel()) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.CashInOut.beforeEqualsDay")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashInOutBeforeEqualsDay)
     }
   }
   
@@ -106,7 +105,7 @@ class CashInOutSpec extends UnitSpecSupport {
     processed.process()
     Try(CashInOut.load(processed.id).error()) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.ActionStatusType.unprocessing")
+      case Failure(e) => e.getMessage should be (ErrorKeys.ActionUnprocessing)
     }
   }
   
@@ -117,7 +116,7 @@ class CashInOutSpec extends UnitSpecSupport {
     val future = saveCio(businessDay, accId, "300", true)
     Try(future.process()) match {
       case Success(v) => fail()
-      case Failure(e) => e.getMessage should be ("error.CashInOut.afterEqualsDay")
+      case Failure(e) => e.getMessage should be (AssetErrorKeys.CashInOutAfterEqualsDay)
     }
     // 発生日到来処理
     val normal = saveCio(businessDay, accId, "300", true, Some(baseDay))

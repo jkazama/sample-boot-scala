@@ -3,6 +3,7 @@ package sample.controller.admin
 import java.time.LocalDate
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -54,18 +55,23 @@ case class LoginStaff(id: String, name: String, authorities: Seq[String])
 @BeanInfo
 class RegHolidayParam {
   @CategoryEmpty
+  @BeanProperty
   var category: String = _
   @Year
+  @BeanProperty
   var year: Int = _
   @Valid
+  @BeanProperty
   var list: Seq[RegHolidayItemParam] = _
   def convert: RegHoliday = RegHoliday(Option(category), year, list.map(_.convert))
 }
 @BeanInfo
 class RegHolidayItemParam {
   @ISODate
+  @BeanProperty
   var day: LocalDate = _
   @Name
+  @BeanProperty
   var name: String = _
   def convert: RegHolidayItem = RegHolidayItem(day, name)
 }
