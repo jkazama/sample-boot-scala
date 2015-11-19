@@ -38,7 +38,7 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.+"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.11:2.6.+"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.11:2.2.9"
-    compile "org.skinny-framework:skinny-orm_2.11:2.0.0.RC4"
+    compile "org.skinny-framework:skinny-orm_2.11:2.0.0"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-aop"
