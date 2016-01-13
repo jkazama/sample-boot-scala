@@ -124,16 +124,17 @@ main
 
 - JDK8以上のインストール
 - Eclipse (Juno以降) のインストール
-- Gradle Plugin (`Pivotal`) のインストール
-    - Eclipse に同梱されている方のプラグインではないので注意してください
+- Gradle Plugin [Buildship] のインストール
+    - Eclipse Mars 以降は Buildship 版が入っているので不要です
 - Scala IDE のインストール
     - ダウンロードに失敗する時はローカルにupdatesiteのファイルをダウンロードして更新してください。
 
 次の手順で本サンプルをプロジェクト化してください。  
 
 1. パッケージエクスプローラから「右クリック -> Import -> Project」で*Gradle Project*を選択して*Next*を押下
-1. *Root folder:*にダウンロードした*sample-boot-scala*ディレクトリを指定して*Build Model*を押下
-1. *Project*で*sample-boot-scala*を選択後、*Finish*を押下(依存ライブラリダウンロードがここで行われます)
+1. *Project root directory* にダウンロードした *sample-boot-scala* ディレクトリを指定して *Next* を押下
+1. *Import Options* で *Next* を押下
+1. *Gradle project structure* に *sample-boot-scala* が表示されたら *Finish* を押下 (依存ライブラリダウンロードがここで行われます)
 1. 追加されたプロジェクト上で「右クリック -> Configure -> Add Scala Nature」を押下
 
 次の手順で本サンプルを実行してください。
