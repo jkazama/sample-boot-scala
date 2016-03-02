@@ -54,7 +54,7 @@ class DataFixtures {
       
       // 口座: sample (passも同様)
       val idSample = "sample"
-      saveAcc(idSample, AccountStatusType.NORMAL)
+      saveAcc(idSample, AccountStatusType.Normal)
       saveLogin(encoder, idSample)
       saveFiAcc(idSample, Remarks.CashOut, ccy)
       saveCb(idSample, businessDay.day, ccy, "1000000")
@@ -90,7 +90,7 @@ object DataFixtures extends DdlExecutor {
       'amount -> BigDecimal(amount), 'updateDate -> LocalDateTime.now)).get
 
   /** キャッシュフローの簡易生成(未処理) */
-  def saveCf(accountId: String, amount: String, eventDay: LocalDate, valueDay: LocalDate, statusType: ActionStatusType = ActionStatusType.UNPROCESSED)(implicit session: DBSession): Cashflow =
+  def saveCf(accountId: String, amount: String, eventDay: LocalDate, valueDay: LocalDate, statusType: ActionStatusType = ActionStatusType.Unprocessed)(implicit session: DBSession): Cashflow =
     Cashflow.findById(Cashflow.createWithAttributes(
       'accountId -> accountId, 'currency -> "JPY", 'amount -> BigDecimal(amount),
       'cashflowType -> CashflowType.CashIn.value, 'remark -> Remarks.CashIn,
@@ -107,7 +107,7 @@ object DataFixtures extends DdlExecutor {
       'valueDay -> eventDay.getOrElse(businessDay.day(3)),
       'targetFiCode -> "tFiCode", 'targetFiAccountId -> "tFiAccId",
       'selfFiCode -> "sFiCode", 'selfFiAccountId -> "sFiAccId",
-      'statusType -> ActionStatusType.UNPROCESSED.value, 'updateDate -> LocalDateTime.now)).get
+      'statusType -> ActionStatusType.Unprocessed.value, 'updateDate -> LocalDateTime.now)).get
 
   // master
 

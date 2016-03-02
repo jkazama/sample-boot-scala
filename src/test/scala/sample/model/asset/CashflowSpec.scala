@@ -29,7 +29,7 @@ class CashflowSpec extends UnitSpecSupport {
     val cf = Cashflow.load(Cashflow.register(
       RegCashflow("test1", "JPY", BigDecimal("1000"), CashflowType.CashIn, "cashIn", None, basePlus1Day)))
     cf.amount should be (BigDecimal(1000))
-    cf.statusType should be (ActionStatusType.UNPROCESSED)
+    cf.statusType should be (ActionStatusType.Unprocessed)
     cf.eventDay should be (baseDay)
     cf.valueDay should be (basePlus1Day)
   }
@@ -49,11 +49,11 @@ class CashflowSpec extends UnitSpecSupport {
     
     // キャッシュフローの残高反映検証。  0 + 1000 = 1000
     val cfNormal = saveCf("test1", "1000", baseMinus1Day, baseDay)
-    cfNormal.statusType should be (ActionStatusType.UNPROCESSED)
+    cfNormal.statusType should be (ActionStatusType.Unprocessed)
     CashBalance.getOrNew("test1", "JPY").amount should be (BigDecimal("0"))
     
     val cfNormalId = cfNormal.realize()
-    Cashflow.load(cfNormalId).statusType should be (ActionStatusType.PROCESSED)
+    Cashflow.load(cfNormalId).statusType should be (ActionStatusType.Processed)
     CashBalance.getOrNew("test1", "JPY").amount should be (BigDecimal("1000"))
     
     // 処理済キャッシュフローの再実現 [例外]
@@ -64,7 +64,7 @@ class CashflowSpec extends UnitSpecSupport {
     
     // 過日キャッシュフローの残高反映検証。 1000 + 2000 = 3000
     val cfPast = saveCf("test1", "2000", baseMinus2Day, baseMinus1Day)
-    Cashflow.load(cfPast.realize()).statusType should be (ActionStatusType.PROCESSED)
+    Cashflow.load(cfPast.realize()).statusType should be (ActionStatusType.Processed)
     CashBalance.getOrNew("test1", "JPY").amount should be (BigDecimal("3000"))
   }
   

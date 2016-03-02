@@ -16,7 +16,7 @@ class AssetSpec extends UnitSpecSupport {
   behavior of "資産"
   
   it should "振込出金可能か判定する" in { implicit session =>
-    saveAcc("test", AccountStatusType.NORMAL)
+    saveAcc("test", AccountStatusType.Normal)
     saveCb("test", LocalDate.of(2014, 11, 18), "JPY", "10000")
     saveCf("test", "1000", LocalDate.of(2014, 11, 18), LocalDate.of(2014, 11, 20))
     saveCf("test", "-2000", LocalDate.of(2014, 11, 19), LocalDate.of(2014, 11, 21))

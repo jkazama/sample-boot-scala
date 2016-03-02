@@ -26,29 +26,29 @@ object Actor {
   def apply(id: String, name: String, roleType: ActorRoleType): Actor = Actor(id, name, roleType, Locale.getDefault(), None, None)
   
   /** 匿名利用者定数 */
-  val Anonymous: Actor = Actor("unknown", ActorRoleType.ANONYMOUS)
+  val Anonymous: Actor = Actor("unknown", ActorRoleType.Anonymous)
   /** システム利用者定数 */
-  val System: Actor = Actor("system", ActorRoleType.SYSTEM);
+  val System: Actor = Actor("system", ActorRoleType.System);
 }
 
 /** 利用者の役割を表現します。 */
 sealed trait ActorRoleType extends EnumSealed {
   @JsonValue def value: String = this.toString()
-  def anonymous: Boolean = this == ActorRoleType.ANONYMOUS
-  def system: Boolean = this == ActorRoleType.SYSTEM
+  def anonymous: Boolean = this == ActorRoleType.Anonymous
+  def system: Boolean = this == ActorRoleType.System
   def notSystem: Boolean = !system
 }
 object ActorRoleType extends Enums[ActorRoleType] {
   /** 匿名利用者(ID等の特定情報を持たない利用者) */
-  case object ANONYMOUS extends ActorRoleType
+  case object Anonymous extends ActorRoleType
   /** 利用者(主にBtoCの顧客, BtoB提供先社員) */
-  case object USER extends ActorRoleType
+  case object User extends ActorRoleType
   /** 内部利用者(主にBtoCの社員, BtoB提供元社員) */
-  case object INTERNAL extends ActorRoleType
+  case object Internal extends ActorRoleType
   /** システム管理者(ITシステム担当社員またはシステム管理会社の社員) */
-  case object ADMINISTRATOR extends ActorRoleType
+  case object Administrator extends ActorRoleType
   /** システム(システム上の自動処理) */
-  case object SYSTEM extends ActorRoleType
+  case object System extends ActorRoleType
 
-  override def values = List(ANONYMOUS, USER, INTERNAL, ADMINISTRATOR, SYSTEM)
+  override def values = List(Anonymous, User, Internal, Administrator, System)
 }

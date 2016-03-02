@@ -16,7 +16,7 @@ case class Staff(
   /** パスワード(暗号化済) */
   password: String) extends Entity {
   
-  def actor: Actor = Actor(id, name, ActorRoleType.INTERNAL)
+  def actor: Actor = Actor(id, name, ActorRoleType.Internal)
 }
 
 object Staff extends SkinnyORMMapperWithIdStr[Staff] {

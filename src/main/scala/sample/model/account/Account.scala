@@ -24,7 +24,7 @@ case class Account(
   /** 口座状態 */
   statusType: AccountStatusType) extends Entity {
 
-  def actor: Actor = Actor(id, name, ActorRoleType.USER)
+  def actor: Actor = Actor(id, name, ActorRoleType.User)
 
   /** 口座に紐付くログイン情報を取得します。 */
   def loadLogin(implicit s: DBSession): Login = Login.load(id)
@@ -50,7 +50,7 @@ object Account extends AccountMapper {
   def register(encoder: PasswordEncoder, p: RegAccount)(implicit s: DBSession): String = {
     Login.register(encoder, p)
     createWithAttributes('id -> p.id, 'name -> p.name, 'mail -> p.mail,
-      'statusType -> AccountStatusType.NORMAL.value)
+      'statusType -> AccountStatusType.Normal.value)
   }
 
   /** 口座を変更します。 */
@@ -70,15 +70,15 @@ trait AccountMapper extends SkinnyORMMapperWithIdStr[Account] {
 /** 口座状態を表現します */
 sealed trait AccountStatusType extends EnumSealed {
   @JsonValue def value: String = this.toString()
-  def inactive: Boolean = (this == AccountStatusType.WITHDRAWAL)
+  def inactive: Boolean = (this == AccountStatusType.Withdrawal)
 }
 object AccountStatusType extends Enums[AccountStatusType] {
   /** 通常 */
-  case object NORMAL extends AccountStatusType
+  case object Normal extends AccountStatusType
   /** 退会 */
-  case object WITHDRAWAL extends AccountStatusType
+  case object Withdrawal extends AccountStatusType
   
-  override def values = List(NORMAL, WITHDRAWAL)
+  override def values = List(Normal, Withdrawal)
 }
 
 /** 登録パラメタ */

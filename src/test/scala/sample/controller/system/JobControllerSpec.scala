@@ -36,12 +36,12 @@ class JobControllerSpec extends ControllerSpecSupport {
       DataFixtures.saveCio(businessDay, "sample", "3000", true, Some(dh.time.day))
     }
     tx { implicit session =>
-      assertThat(CashInOut.load(co.id).statusType.value, is(ActionStatusType.UNPROCESSED.value))
+      assertThat(CashInOut.load(co.id).statusType.value, is(ActionStatusType.Unprocessed.value))
     }
     // 実行検証
     performPost("/daily/closingCashOut");
     tx { implicit session => 
-      assertThat(CashInOut.load(co.id).statusType.value, is(ActionStatusType.PROCESSED.value))
+      assertThat(CashInOut.load(co.id).statusType.value, is(ActionStatusType.Processed.value))
     }
   }
 
@@ -52,14 +52,14 @@ class JobControllerSpec extends ControllerSpecSupport {
     // 当日実現のキャッシュフローを準備
     val cf = tx { implicit session => 
       val saved = DataFixtures.saveCf("sample", "3000", dayMinus1, day)
-      assertThat(Cashflow.load(saved.id).statusType.value, is(ActionStatusType.UNPROCESSED.value))
+      assertThat(Cashflow.load(saved.id).statusType.value, is(ActionStatusType.Unprocessed.value))
       assertThat(CashBalance.getOrNew("sample", "JPY").amount, is(BigDecimal("1000000.0000")))
       saved
     }
     // 実行検証
     performPost("/daily/realizeCashflow");
     tx { implicit session =>
-      assertThat(Cashflow.load(cf.id).statusType.value, is(ActionStatusType.PROCESSED.value))
+      assertThat(Cashflow.load(cf.id).statusType.value, is(ActionStatusType.Processed.value))
       assertThat(CashBalance.getOrNew("sample", "JPY").amount, is(BigDecimal("1003000.0000")))
     }
 

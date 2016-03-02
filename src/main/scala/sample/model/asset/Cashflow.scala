@@ -53,7 +53,7 @@ case class Cashflow(
     ) match {
       case Success(v) =>
         Cashflow.updateById(id).withAttributes(
-          'statusType -> ActionStatusType.PROCESSED.value)
+          'statusType -> ActionStatusType.Processed.value)
         CashBalance.add(accountId, currency, amount)
         id
       case Failure(e) => throw e
@@ -70,7 +70,7 @@ case class Cashflow(
     ) match {
       case Success(v) =>
         Cashflow.updateById(id).withAttributes(
-          'statusType -> ActionStatusType.ERROR.value)
+          'statusType -> ActionStatusType.Error.value)
       case Failure(e) => throw e
     }
 }
@@ -123,7 +123,7 @@ object Cashflow extends CashflowMapper {
       'eventDay -> p.eventDay.getOrElse(dh.time.day),
       'eventDate -> dh.time.date,
       'valueDay -> p.valueDay,
-      'statusType -> ActionStatusType.UNPROCESSED.value))
+      'statusType -> ActionStatusType.Unprocessed.value))
 
 }
   

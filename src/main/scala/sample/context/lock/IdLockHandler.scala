@@ -1,13 +1,11 @@
 package sample.context.lock
 
 import java.util.concurrent.locks.ReentrantReadWriteLock
-
 import org.springframework.stereotype.Component
-
 import com.fasterxml.jackson.annotation.JsonValue
-
 import sample.InvocationException
 import sample.context._
+import sample.ErrorKeys
 
 /**
  * ID単位のロックを表現します。
@@ -30,7 +28,7 @@ class IdLockHandler {
       callable
     } catch {
       case e: RuntimeException => throw e
-      case e: Exception => throw InvocationException("error.Exception", e);
+      case e: Exception => throw InvocationException(ErrorKeys.Exception, e);
     } finally {
       unlock(id);
     }

@@ -18,25 +18,25 @@ sealed trait ActionStatusType {
 }
 object ActionStatusType extends Enums[ActionStatusType] {
   /** 未処理 */
-  case object UNPROCESSED extends ActionStatusType
+  case object Unprocessed extends ActionStatusType
   /** 処理中 */
-  case object PROCESSING extends ActionStatusType
+  case object Processing extends ActionStatusType
   /** 処理済 */
-  case object PROCESSED extends ActionStatusType
+  case object Processed extends ActionStatusType
   /** 取消 */
-  case object CANCELLED extends ActionStatusType
+  case object Cancelled extends ActionStatusType
   /** エラー */
-  case object ERROR extends ActionStatusType
+  case object Error extends ActionStatusType
 
-  override def values = List(UNPROCESSED, PROCESSING, PROCESSED, CANCELLED, ERROR)
+  override def values = List(Unprocessed, Processing, Processed, Cancelled, Error)
 
   /** 完了済みのステータス一覧 */
-  def finishTypes = List(PROCESSED, CANCELLED)
+  def finishTypes = List(Processed, Cancelled)
   def finishTypeValues: List[String] = finishTypes.map(_.value)
   /** 未完了のステータス一覧(処理中は含めない) */
-  def unprocessingTypes = List(UNPROCESSED, ERROR)
+  def unprocessingTypes = List(Unprocessed, Error)
   def unprocessingTypeValues: List[String] = unprocessingTypes.map(_.value)
   /** 未完了のステータス一覧(処理中も含める) */
-  def unprocessedTypes = List(UNPROCESSED, PROCESSING, ERROR)
+  def unprocessedTypes = List(Unprocessed, Processing, Error)
   def unprocessedTypeValues: List[String] = unprocessedTypes.map(_.value)
 }

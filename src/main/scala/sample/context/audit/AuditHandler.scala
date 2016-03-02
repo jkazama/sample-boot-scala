@@ -20,9 +20,9 @@ import scalikejdbc._
  */
 @Component
 class AuditHandler {
-  val loggerActor: Logger = LoggerFactory.getLogger("Audit.Actor")
-  val loggerEvent: Logger = LoggerFactory.getLogger("Audit.Event")
-  val loggerSystem: Logger = LoggerFactory.getLogger(classOf[AuditHandler])
+  val LoggerActor: Logger = LoggerFactory.getLogger("Audit.Actor")
+  val LoggerEvent: Logger = LoggerFactory.getLogger("Audit.Event")
+  val LoggerSystem: Logger = LoggerFactory.getLogger(classOf[AuditHandler])
 
   @Autowired
   private var session: ActorSession = _
@@ -54,7 +54,7 @@ class AuditHandler {
     }
   }
   
-  private def logger: Logger = if (session.actor.roleType.system) loggerEvent else loggerActor
+  private def logger: Logger = if (session.actor.roleType.system) LoggerEvent else LoggerActor
   
   private def msg(message: String, prefix: String, startMillis: Option[Long] = None): String = {
     val actor = session.actor
@@ -74,20 +74,20 @@ class AuditHandler {
     try {
       Try(id = Option(persister.startActor(RegAuditActor(category, message)))) match {
         case Success(v) => // nothing
-        case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+        case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
       }
       callable
     } catch {
       case e: ValidationException =>
         Try(id.map(persister.cancelActor(_, e.getMessage))) match {
           case Success(v) => // nothing
-          case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+          case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
         }
         throw e
       case e: Exception =>
         Try(id.map(persister.errorActor(_, e.getMessage))) match {
           case Success(v) => // nothing
-          case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+          case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
         }
         throw e
     }    
@@ -98,20 +98,20 @@ class AuditHandler {
     try {
       Try(id = Option(persister.startEvent(RegAuditEvent(category, message)))) match {
         case Success(v) => // nothing
-        case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+        case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
       }
       callable
     } catch {
       case e: ValidationException =>
         Try(id.map(persister.cancelEvent(_, e.getMessage))) match {
           case Success(v) => // nothing
-          case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+          case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
         }
         throw e
       case e: Exception =>
         Try(id.map(persister.errorEvent(_, e.getMessage))) match {
           case Success(v) => // nothing
-          case Failure(ex) => loggerSystem.error(ex.getMessage, ex)
+          case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
         }
         throw e
     }    
