@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
  */
 @SpringBootApplication
 @EnableCaching(proxyTargetClass = true)
-@EnableScheduling
 class Application
 
 object Application {
