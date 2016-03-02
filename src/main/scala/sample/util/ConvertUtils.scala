@@ -6,10 +6,10 @@ import com.ibm.icu.text.Transliterator
 
 /** 各種型/文字列変換をサポートします。(ICU4Jライブラリに依存しています) */
 trait ConvertUtils {
-  private val zenkakuToHan: Transliterator = Transliterator.getInstance("Fullwidth-Halfwidth")
-  private val hankakuToZen: Transliterator = Transliterator.getInstance("Halfwidth-Fullwidth")
-  private val katakanaToHira: Transliterator = Transliterator.getInstance("Katakana-Hiragana")
-  private val hiraganaToKana: Transliterator = Transliterator.getInstance("Hiragana-Katakana")
+  private val ZenkakuToHan: Transliterator = Transliterator.getInstance("Fullwidth-Halfwidth")
+  private val HankakuToZen: Transliterator = Transliterator.getInstance("Halfwidth-Fullwidth")
+  private val KatakanaToHira: Transliterator = Transliterator.getInstance("Katakana-Hiragana")
+  private val HiraganaToKana: Transliterator = Transliterator.getInstance("Hiragana-Katakana")
   
   /** 例外無しにLongへ変換します。(変換できない時はNone) */
   def quietlyLong(value: Any): Option[Long] = try {
@@ -41,22 +41,22 @@ trait ConvertUtils {
   
   /** 全角文字を半角にします。 */
   def zenkakuToHan(text: String): String =
-    Option(text).map(zenkakuToHan.transliterate(_)).getOrElse(null)
+    Option(text).map(ZenkakuToHan.transliterate(_)).getOrElse(null)
   
   /** 半角文字を全角にします。 */
   def hankakuToZen(text: String): String =
-    Option(text).map(hankakuToZen.transliterate(_)).getOrElse(null)
+    Option(text).map(HankakuToZen.transliterate(_)).getOrElse(null)
   
   /** カタカナをひらがなにします。 */
   def katakanaToHira(text: String): String =
-    Option(text).map(katakanaToHira.transliterate(_)).getOrElse(null)
+    Option(text).map(KatakanaToHira.transliterate(_)).getOrElse(null)
   
   /**
    * ひらがな/半角カタカナを全角カタカナにします。
    * <p>low: 実際の挙動は厳密ではないので単体検証(ConvertUtilsSpec)などで事前に確認して下さい。
    */
   def hiraganaToZenKana(text: String): String =
-    Option(text).map(hiraganaToKana.transliterate(_)).getOrElse(null)
+    Option(text).map(HiraganaToKana.transliterate(_)).getOrElse(null)
 
   /**
    * ひらがな/全角カタカナを半角カタカナにします。

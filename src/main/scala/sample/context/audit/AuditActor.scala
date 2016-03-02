@@ -68,7 +68,7 @@ object AuditActor extends AuditActorMapper {
         'source -> actor.source,
         'category -> p.category,
         'message -> ConvertUtils.left(p.message, 300),
-        'statusType -> ActionStatusType.PROCESSING.value,
+        'statusType -> ActionStatusType.Processing.value,
         'startDate -> dh.time.date)
     ).get
     
@@ -77,7 +77,7 @@ object AuditActor extends AuditActorMapper {
     val now = dh.time.date
     val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
-      'statusType -> ActionStatusType.PROCESSED.value,
+      'statusType -> ActionStatusType.Processed.value,
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())
   }
@@ -87,7 +87,7 @@ object AuditActor extends AuditActorMapper {
     val now = dh.time.date
     val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
-      'statusType -> ActionStatusType.CANCELLED.value,
+      'statusType -> ActionStatusType.Cancelled.value,
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())
   }
@@ -97,7 +97,7 @@ object AuditActor extends AuditActorMapper {
     val now = dh.time.date
     val m = findById(id).getOrElse(throw ValidationException(ErrorKeys.EntityNotFound))
     updateById(id).withAttributes(
-      'statusType -> ActionStatusType.ERROR.value,
+      'statusType -> ActionStatusType.Error.value,
       'errorReason -> StringUtils.abbreviate(errorReason, 250),
       'endDate -> now,
       'time -> DateUtils.between(m.startDate, now).get.toMillis())

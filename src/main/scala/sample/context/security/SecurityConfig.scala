@@ -1,6 +1,7 @@
 package sample.context.security
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties._
@@ -45,18 +46,26 @@ class SecurityConfig {
 @ConfigurationProperties(prefix = "extension.security")
 class SecurityProperties {
   /** Spring Security依存の認証/認可設定情報 */
+  @BeanProperty
   var auth: SecurityAuthProperties = new SecurityAuthProperties()
   /** CORS設定情報 */
+  @BeanProperty
   var cors: SecurityCorsProperties = new SecurityCorsProperties()
 }
 
 /** CORS設定情報を表現します。 */
 @BeanInfo
 class SecurityCorsProperties {
+  @BeanProperty
   var allowCredentials = true
+  @BeanProperty
   var allowedOrigin = "*"
+  @BeanProperty
   var allowedHeader = "*"
+  @BeanProperty
   var allowedMethod = "*"
+  @BeanProperty
   var maxAge: Long = 3600L
+  @BeanProperty
   var path = "/**"
 }

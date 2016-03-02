@@ -65,7 +65,7 @@ case class CashInOut(
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
-          'statusType -> ActionStatusType.PROCESSED.value,
+          'statusType -> ActionStatusType.Processed.value,
           'cashflowId -> Some(Cashflow.register(regCf)))
         id
       case Failure(e) => throw e
@@ -90,7 +90,7 @@ case class CashInOut(
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
-          'statusType -> ActionStatusType.CANCELLED.value)
+          'statusType -> ActionStatusType.Cancelled.value)
       case Failure(e) => throw e
     }
         
@@ -105,7 +105,7 @@ case class CashInOut(
     ) match {
       case Success(v) =>
         CashInOut.updateById(id).withAttributes(
-          'statusType -> ActionStatusType.ERROR.value)
+          'statusType -> ActionStatusType.Error.value)
       case Failure(e) => throw e
     }
 
@@ -187,7 +187,7 @@ object CashInOut extends CashInOutMapper {
           'targetFiAccountId -> acc.fiAccountId,
           'selfFiCode -> selfAcc.fiCode,
           'selfFiAccountId -> selfAcc.fiAccountId,
-          'statusType -> ActionStatusType.UNPROCESSED.value,
+          'statusType -> ActionStatusType.Unprocessed.value,
           'updateDate -> dh.time.date)
       case Failure(e) => throw e
     }

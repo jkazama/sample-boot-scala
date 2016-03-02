@@ -24,7 +24,7 @@ class CashInOutSpec extends UnitSpecSupport {
   override def postBefore = {implicit s: DBSession =>
     // 残高1000円の口座(test)を用意
     saveSelfFiAcc(Remarks.CashOut, ccy)
-    saveAcc(accId, AccountStatusType.NORMAL)
+    saveAcc(accId, AccountStatusType.Normal)
     saveFiAcc(accId, Remarks.CashOut, ccy)
     saveCb(accId, businessDay.day, ccy, "1000")
   }
@@ -36,9 +36,9 @@ class CashInOutSpec extends UnitSpecSupport {
     saveCio(businessDay, accId, "300", true)
     //low: ちゃんとやると大変なので最低限の検証
     CashInOut.find(findParam(baseDay, basePlus1Day)).size should be (1)
-    CashInOut.find(findParam(baseDay, basePlus1Day, ActionStatusType.UNPROCESSED)).size should be (1)
-    CashInOut.find(findParam(baseDay, basePlus1Day, ActionStatusType.PROCESSED)).size should be (0)
-    CashInOut.find(findParam(basePlus1Day, basePlus2Day, ActionStatusType.UNPROCESSED)).size should be (0)
+    CashInOut.find(findParam(baseDay, basePlus1Day, ActionStatusType.Unprocessed)).size should be (1)
+    CashInOut.find(findParam(baseDay, basePlus1Day, ActionStatusType.Processed)).size should be (0)
+    CashInOut.find(findParam(basePlus1Day, basePlus2Day, ActionStatusType.Unprocessed)).size should be (0)
   }
   def findParam(fromDay: LocalDate, toDay: LocalDate, statusTypes: ActionStatusType*) =
     FindCashInOut(Some(ccy), statusTypes, fromDay, toDay)
@@ -70,7 +70,7 @@ class CashInOutSpec extends UnitSpecSupport {
     normal.targetFiAccountId should be (s"FI${accId}")
     normal.selfFiCode should be (s"${Remarks.CashOut}-${ccy}")
     normal.selfFiAccountId should be ("xxxxxx")
-    normal.statusType should be (ActionStatusType.UNPROCESSED)
+    normal.statusType should be (ActionStatusType.Unprocessed)
     normal.cashflowId should be (None)
     
     // 拘束額を考慮した出金依頼 [例外]
@@ -84,7 +84,7 @@ class CashInOutSpec extends UnitSpecSupport {
     // CF未発生の依頼を取消
     val normal = saveCio(businessDay, accId, "300", true)
     normal.cancel()
-    CashInOut.load(normal.id).statusType should be (ActionStatusType.CANCELLED)
+    CashInOut.load(normal.id).statusType should be (ActionStatusType.Cancelled)
     
     // 発生日を迎えた場合は取消できない [例外]
     val today = saveCio(businessDay, accId, "300", true, Some(businessDay.day))
@@ -98,7 +98,7 @@ class CashInOutSpec extends UnitSpecSupport {
     // CF未発生の依頼を取消
     val normal = saveCio(businessDay, accId, "300", true)
     normal.error()
-    CashInOut.load(normal.id).statusType should be (ActionStatusType.ERROR)
+    CashInOut.load(normal.id).statusType should be (ActionStatusType.Error)
     
     // 処理済の時はエラーにできない [例外]
     val processed = saveCio(businessDay, accId, "300", true, Some(businessDay.day))
@@ -121,7 +121,7 @@ class CashInOutSpec extends UnitSpecSupport {
     // 発生日到来処理
     val normal = saveCio(businessDay, accId, "300", true, Some(baseDay))
     val processed = CashInOut.load(normal.process())
-    processed.statusType should be (ActionStatusType.PROCESSED)
+    processed.statusType should be (ActionStatusType.Processed)
     processed.cashflowId.isDefined should be (true)
     val cf = Cashflow.load(processed.cashflowId.get)
     cf.accountId should be (accId)
@@ -131,7 +131,7 @@ class CashInOutSpec extends UnitSpecSupport {
     cf.remark should be (Remarks.CashOut)
     cf.eventDay should be (baseDay)
     cf.valueDay should be (baseDay)
-    cf.statusType should be (ActionStatusType.PROCESSED)
+    cf.statusType should be (ActionStatusType.Processed)
   }
 
 }

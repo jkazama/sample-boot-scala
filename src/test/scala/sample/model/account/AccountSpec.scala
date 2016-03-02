@@ -14,15 +14,15 @@ class AccountSpec extends UnitSpecSupport {
   behavior of "口座管理"
   
   it should "通常口座が取得できる" in { implicit session =>
-    DataFixtures.saveAcc("normal", AccountStatusType.NORMAL)
+    DataFixtures.saveAcc("normal", AccountStatusType.Normal)
     val acc = Account.loadActive("normal")
 
     acc.id should be ("normal")
-    acc.statusType should be (AccountStatusType.NORMAL)
+    acc.statusType should be (AccountStatusType.Normal)
   }
 
   it should "退会時に例外が発生する" in { implicit session =>
-    DataFixtures.saveAcc("withdrawal", AccountStatusType.WITHDRAWAL)
+    DataFixtures.saveAcc("withdrawal", AccountStatusType.Withdrawal)
     Try(Account.loadActive("withdrawal")) match {
       case Success(v) => fail()
       case Failure(e) => e.getMessage should be ("error.Account.loadActive")
@@ -45,7 +45,7 @@ class AccountSpec extends UnitSpecSupport {
   }
   
   it should "口座を変更する" in { implicit session =>
-    DataFixtures.saveAcc("normal", AccountStatusType.NORMAL)
+    DataFixtures.saveAcc("normal", AccountStatusType.Normal)
     val p = ChgAccount("sample user", "sample@example.com")
     Account.change("normal", p)
     val acc = Account.findById("normal")

@@ -20,7 +20,7 @@ class AuditActorSpec extends UnitSpecSupport {
     AuditActor.finish(idA)
     AuditActor.cancel(idB, "取消")
     AuditActor.error(idC, "例外")
-    val list = AuditActor.find(FindAuditActor(roleType = ActorRoleType.ANONYMOUS, fromDay = LocalDate.now(), toDay = LocalDate.now()))
+    val list = AuditActor.find(FindAuditActor(roleType = ActorRoleType.Anonymous, fromDay = LocalDate.now(), toDay = LocalDate.now()))
     list.list.size should be (3)
   }
 }

@@ -8,7 +8,7 @@ import java.time.temporal.{ChronoField, TemporalAccessor, TemporalQuery}
  * 頻繁に利用される日時ユーティリティを表現します。
  */
 trait DateUtils {
-  private val weekendQuery: WeekendQuery = new WeekendQuery()
+  private val WeekendQuery: WeekendQuery = new WeekendQuery()
 
   /** 指定された文字列(YYYY-MM-DD)を元に日付へ変換します。 */
   def day(dayStr: String): LocalDate = dayOpt(dayStr).getOrElse(null)
@@ -55,7 +55,7 @@ trait DateUtils {
     else Option(Duration.between(start, end))
 
   /** 指定営業日が週末(土日)か判定します。(引数は必須) */
-  def isWeekend(day: LocalDate): Boolean = day.query(weekendQuery)
+  def isWeekend(day: LocalDate): Boolean = day.query(WeekendQuery)
 
   /** 指定年の最終日を取得します。 */
   def dayTo(year: Int): LocalDate = LocalDate.ofYearDay(year, if (Year.of(year).isLeap()) 366 else 365)

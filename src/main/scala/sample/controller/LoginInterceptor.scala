@@ -36,8 +36,8 @@ class DummyLoginInterceptor {
   private var session: ActorSession = _
   
   @Before("execution(* *..controller.*Controller.*(..))")
-  def bindUser() = session.bind(Actor("sample", ActorRoleType.USER)) 
+  def bindUser() = session.bind(Actor("sample", ActorRoleType.User)) 
   
   @Before("execution(* *..controller.admin.*Controller.*(..))")
-  def bindAdmin() = session.bind(Actor("admin", ActorRoleType.INTERNAL));
+  def bindAdmin() = session.bind(Actor("admin", ActorRoleType.Internal));
 }

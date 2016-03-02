@@ -3,6 +3,7 @@ package sample.context.security
 import java.util.Locale
 
 import scala.beans.BeanInfo
+import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition._
@@ -128,22 +129,31 @@ class SecurityAuthConfig extends WebSecurityConfigurerAdapter {
 @BeanInfo
 class SecurityAuthProperties {
   /** リクエスト時のログインIDを取得するキー */
+  @BeanProperty
   var loginKey = "loginId"
   /** リクエスト時のパスワードを取得するキー */
+  @BeanProperty
   var passwordKey = "password"
   /** 認証対象パス */
+  @BeanProperty
   var path = Array("/api/**")
   /** 認証対象パス(管理者向け) */
+  @BeanProperty
   var pathAdmin = Array("/api/admin/**")
   /** 認証除外パス(認証対象からの除外) */
+  @BeanProperty
   var excludesPath = Array("/api/system/job/**")
   /** 認証無視パス(フィルタ未適用の認証未考慮、静的リソース等) */
+  @BeanProperty
   var ignorePath = Array("/css/**", "/js/**", "/img/**", "/**/favicon.ico")
   /** ログインAPIパス */
+  @BeanProperty
   var loginPath = "/api/login"
   /** ログアウトAPIパス */
+  @BeanProperty
   var logoutPath = "/api/logout"
   /** 一人が同時利用可能な最大セッション数 */
+  @BeanProperty
   var maximumSessions: Int = 2
   /**
    * 社員向けモードの時はtrue。
@@ -153,8 +163,10 @@ class SecurityAuthProperties {
    * <li>false: SecurityAdminService
    * </ul> 
    */
+  @BeanProperty
   var admin = false;
   /** 認証が有効な時はtrue */
+  @BeanProperty
   var enabled = true
 }
 
