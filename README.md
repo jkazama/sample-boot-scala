@@ -199,10 +199,10 @@ Spring Boot では Executable Jar ( ライブラリなども内包する実行�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-boot-starter-*` | 1.3.3    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
-| `scala-compiler/library`| 2.11.7   | Scala コンパイラ/基本ライブラリ |
-| `skinny-orm`            | 2.0.7    | Scala ベースの ORM ライブラリ |
-| `scalikejdbc-jsr310`    | 2.3.5    | Skinny ORM の JSR310 対応 |
+| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
+| `scala-compiler/library`| 2.11.8   | Scala コンパイラ/基本ライブラリ |
+| `skinny-orm`            | 2.1.0    | Scala ベースの ORM ライブラリ |
+| `scalikejdbc-jsr310`    | 2.4.0    | Skinny ORM の JSR310 対応 |
 | `ehcache-core`          | 2.6.+    | 最新の EhCache 設定記法を利用するため |
 | `jackson-datatype-jsr310`| 2.6.+   | JSON 変換時の JSR310 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
