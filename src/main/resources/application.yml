@@ -5,11 +5,11 @@ spring:
   messages.basename: messages-validation, messages
   main.show-banner: false 
 
-server.port: 8080
-
-error:
-  whitelabel.enabled: false
-  path: /api/error
+server:
+  port: 8080
+  error:
+    whitelabel.enabled: false
+    path: /api/error
 
 security.basic.enabled: false
 
