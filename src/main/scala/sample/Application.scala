@@ -3,7 +3,7 @@ package sample
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cache.annotation.EnableCaching
-import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.context.annotation.Import
 
 /**
  * アプリケーションプロセスの起動クラス。
@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
  */
 @SpringBootApplication
 @EnableCaching(proxyTargetClass = true)
+@Import(Array(classOf[ApplicationConfig], classOf[ApplicationDbConfig], classOf[ApplicationSecurityConfig]))
 class Application
 
 object Application {

@@ -5,7 +5,6 @@ import scala.util.{ Try, Success, Failure }
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 import sample._
 import sample.context._
@@ -18,7 +17,6 @@ import scalikejdbc._
  * <p>対象となるログはLoggerだけでなく、システムスキーマの監査テーブルへ書きだされます。
  * (開始時と完了時で別TXにする事で応答無し状態を検知可能)
  */
-@Component
 class AuditHandler {
   val LoggerActor: Logger = LoggerFactory.getLogger("Audit.Actor")
   val LoggerEvent: Logger = LoggerFactory.getLogger("Audit.Event")
@@ -120,7 +118,6 @@ class AuditHandler {
 /**
  * 監査ログをシステムスキーマへ永続化します。
  */
-@Component
 class AuditPersister {
   @Autowired
   private implicit var dh: DomainHelper = _

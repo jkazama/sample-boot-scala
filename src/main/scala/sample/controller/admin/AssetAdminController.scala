@@ -27,7 +27,7 @@ class AssetAdminController extends ControllerSupport {
   private var service: AssetAdminService = _
   
   /** 未処理の振込依頼情報を検索します。 */
-  @RequestMapping(value = Array("/cio/"))
+  @GetMapping(Array("/cio/"))
   def findCashInOut(@Valid p: FindCashInOutParam): Seq[CashInOut] =
     service.findCashInOut(p.convert)
 }

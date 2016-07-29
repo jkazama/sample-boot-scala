@@ -31,22 +31,22 @@ class SystemAdminController extends ControllerSupport {
   private var service: SystemAdminService = _
   
   /** 利用者監査ログを検索します。 */
-  @RequestMapping(value = Array("/audit/actor/"))
+  @GetMapping(Array("/audit/actor/"))
   def findAuditActor(@Valid p: FindAuditActorParam): PagingList[AuditActor] =
     service.findAuditActor(p.convert)
 
   /** イベント監査ログを検索します。 */
-  @RequestMapping(value = Array("/audit/event/"))
+  @GetMapping(Array("/audit/event/"))
   def findAuditEvent(@Valid p: FindAuditEventParam): PagingList[AuditEvent] =
     service.findAuditEvent(p.convert)
     
   /** アプリケーション設定一覧を検索します。 */
-  @RequestMapping(value = Array("/setting/"))
+  @GetMapping(Array("/setting/"))
   def findAppSetting(@Valid p: FindAppSettingParam): Seq[AppSetting] =
     service.findAppSetting(p.convert)
 
   /** アプリケーション設定情報を変更します。 */
-  @RequestMapping(value = Array("/setting/{id}"), method = Array(RequestMethod.POST))
+  @PostMapping(Array("/setting/{id}"))
   def changeAppSetting(@PathVariable id: String, value: String): ResponseEntity[Void] =
     resultEmpty(service.changeAppSetting(id, value))
 }

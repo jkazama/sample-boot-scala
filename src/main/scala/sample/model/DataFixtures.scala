@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure._
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import org.springframework.context.annotation.DependsOn
 import javax.annotation.PostConstruct
 import sample._
 import sample.context._
@@ -24,9 +25,9 @@ import scalikejdbc._
  */
 @Component
 @ConditionalOnProperty(prefix = "extension.datafixture", name = Array("enabled"), matchIfMissing = false)
+@DependsOn(Array("skinnyOrm"))
 @BeanInfo
 class DataFixtures {
-  
   @Autowired
   var encoder: PasswordEncoder = _
   @Autowired

@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
-
 import sample.context.actor._
-import sample.context.security.SecurityAuthConfig
+import sample.context.security.SecurityConfigurer
 
 /**
  * Spring Securityの設定状況に応じてスレッドローカルへ利用者を紐付けるAOPInterceptor。
@@ -30,7 +29,7 @@ class LoginInterceptor {
  */
 @Aspect
 @Component
-@ConditionalOnMissingBean(Array(classOf[SecurityAuthConfig]))
+@ConditionalOnMissingBean(Array(classOf[SecurityConfigurer]))
 class DummyLoginInterceptor {
   @Autowired
   private var session: ActorSession = _

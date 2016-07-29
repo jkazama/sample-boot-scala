@@ -8,7 +8,6 @@ import scala.collection.JavaConversions._
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.support.ResourceBundleMessageSource
-import org.springframework.stereotype.Component
 
 /**
  * ResourceBundleに対する簡易アクセスを提供します。
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component
  * 持つため、別インスタンスでの管理としています。
  * （spring.messageとは別に指定[extension.messages]する必要があるので注意してください）
  */
-@Component
 @ConfigurationProperties(prefix = "extension.messages")
 class ResourceBundleHandler {
   

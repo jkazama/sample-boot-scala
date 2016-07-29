@@ -5,12 +5,10 @@ import java.util.Collection
 import scala.collection.JavaConversions._
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.core._
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails._
-import org.springframework.stereotype.Component
 
 import javax.servlet.http.HttpServletRequest
 import sample.context.actor.Actor
@@ -18,8 +16,6 @@ import sample.context.actor.Actor
 /**
  * Spring Securityで利用される認証/認可対象となるユーザ情報を提供します。
  */
-@Component
-@ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class SecurityActorFinder {
   @Autowired
   private var props: SecurityProperties = _

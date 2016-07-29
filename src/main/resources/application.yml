@@ -3,7 +3,14 @@ spring:
   application.name: sample-boot-scala
   aop.proxy-target-class: true
   messages.basename: messages-validation, messages
-  main.show-banner: false 
+  cache.jcache.config: ehcache.xml
+  http.multipart:
+    max-file-size: 20MB
+    max-request-size: 20MB
+
+banner.location: banner.txt
+
+logging.config: classpath:logback-spring.xml
 
 server:
   port: 8080
@@ -11,11 +18,10 @@ server:
     whitelabel.enabled: false
     path: /api/error
 
-security.basic.enabled: false
+security:
+  basic.enabled: false
+  user.password: unused
 
-multipart:
-  maxFileSize: 20MB
-  maxRequestSize: 20MB
 
 management:
   context-path: /api/management

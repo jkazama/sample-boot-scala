@@ -30,11 +30,11 @@ class MasterAdminController extends ControllerSupport {
   private var securityProps: SecurityProperties = _
   
   /** 社員ログイン状態を確認します。 */
-  @RequestMapping(value = Array("/loginStatus"))
+  @GetMapping(Array("/loginStatus"))
   def loginStatus: Boolean = true
   
   /** 社員ログイン情報を取得します。 */
-  @RequestMapping(value = Array("/loginStaff"))
+  @GetMapping(Array("/loginStaff"))
   def loadLoginStaff: LoginStaff =
     if (securityProps.auth.enabled) {
       SecurityActorFinder.actorDetails.map(details =>
@@ -43,7 +43,7 @@ class MasterAdminController extends ControllerSupport {
     } else LoginStaff("sample", "sample", Seq()) // for dummy login
   
   /** 休日を登録します。 */
-  @RequestMapping(value = Array("/holiday/"), method = Array(RequestMethod.POST))
+  @PostMapping(Array("/holiday/"))
   def registerHoliday(@Valid p: RegHolidayParam): ResponseEntity[Void] =
     resultEmpty(service.registerHoliday(p.convert))
 }

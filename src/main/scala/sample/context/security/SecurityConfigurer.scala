@@ -42,11 +42,7 @@ import sample.context.actor.ActorSession
  * SpringSession(HttpSessionの実装をRedis等でサポート)を利用する事でコード変更無しに対応が可能となります。
  * <p>low: 本サンプルでは無効化していますが、CSRF対応はプロジェクト毎に適切な利用を検討してください。
  */
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
-@ConditionalOnProperty(prefix = "extension.security.auth", name = Array("enabled"), matchIfMissing = true)
-@Order(org.springframework.boot.autoconfigure.security.SecurityProperties.ACCESS_OVERRIDE_ORDER)
-class SecurityAuthConfig extends WebSecurityConfigurerAdapter {
+class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
   /** Spring Boot のサーバ情報 */
   @Autowired
@@ -78,9 +74,7 @@ class SecurityAuthConfig extends WebSecurityConfigurerAdapter {
   
   override def configure(auth: AuthenticationManagerBuilder) =
     auth.eraseCredentials(true).authenticationProvider(securityProvider)
-  
-  @Bean
-  @ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
+
   override def authenticationManagerBean(): AuthenticationManager =
     super.authenticationManagerBean()
   
@@ -125,57 +119,10 @@ class SecurityAuthConfig extends WebSecurityConfigurerAdapter {
   }
 }
 
-/** Spring Securityに対する拡張設定情報。(ScurityConfig#SecurityPropertiesによって管理されています) */
-@BeanInfo
-class SecurityAuthProperties {
-  /** リクエスト時のログインIDを取得するキー */
-  @BeanProperty
-  var loginKey = "loginId"
-  /** リクエスト時のパスワードを取得するキー */
-  @BeanProperty
-  var passwordKey = "password"
-  /** 認証対象パス */
-  @BeanProperty
-  var path = Array("/api/**")
-  /** 認証対象パス(管理者向け) */
-  @BeanProperty
-  var pathAdmin = Array("/api/admin/**")
-  /** 認証除外パス(認証対象からの除外) */
-  @BeanProperty
-  var excludesPath = Array("/api/system/job/**")
-  /** 認証無視パス(フィルタ未適用の認証未考慮、静的リソース等) */
-  @BeanProperty
-  var ignorePath = Array("/css/**", "/js/**", "/img/**", "/**/favicon.ico")
-  /** ログインAPIパス */
-  @BeanProperty
-  var loginPath = "/api/login"
-  /** ログアウトAPIパス */
-  @BeanProperty
-  var logoutPath = "/api/logout"
-  /** 一人が同時利用可能な最大セッション数 */
-  @BeanProperty
-  var maximumSessions: Int = 2
-  /**
-   * 社員向けモードの時はtrue。
-   * <p>ログインパスは同じですが、ログイン処理の取り扱いが切り替わります。
-   * <ul>
-   * <li>true: SecurityUserService
-   * <li>false: SecurityAdminService
-   * </ul> 
-   */
-  @BeanProperty
-  var admin = false;
-  /** 認証が有効な時はtrue */
-  @BeanProperty
-  var enabled = true
-}
-
 /**
  * Spring Securityのカスタム認証プロバイダ。
  * <p>主にパスワード照合を行っています。
  */
-@Component
-@ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class SecurityProvider extends AuthenticationProvider {
   @Autowired
   private var actorFinder: SecurityActorFinder = _
@@ -207,8 +154,6 @@ class SecurityProvider extends AuthenticationProvider {
  * Spring Securityのカスタムエントリポイント。
  * <p>API化を念頭に例外発生時の実装差込をしています。
  */
-@Component
-@ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class SecurityEntryPoint extends AuthenticationEntryPoint {
   @Autowired
   var msg: MessageSource = _
@@ -247,8 +192,6 @@ case class ActorSessionFilter(actorSession: ActorSession) extends GenericFilterB
 /**
  * Spring Securityにおけるログイン/ログアウト時の振る舞いを拡張するHandler。
  */
-@Component
-@ConditionalOnBean(Array(classOf[SecurityAuthConfig]))
 class LoginHandler extends AuthenticationSuccessHandler with AuthenticationFailureHandler with LogoutSuccessHandler {
   @Autowired
   var props: SecurityProperties = _

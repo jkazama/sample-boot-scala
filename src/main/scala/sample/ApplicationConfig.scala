@@ -8,13 +8,20 @@ import org.springframework.context.annotation._
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
-
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-
 import sample.context.Timestamper
 import sample.model.BusinessDayHandler
+import sample.context.actor.ActorSession
+import sample.context.ResourceBundleHandler
+import sample.context.AppSettingHandler
+import sample.context.audit.AuditHandler
+import sample.context.audit.AuditPersister
+import sample.context.lock.IdLockHandler
+import sample.context.mail.MailHandler
+import sample.context.report.ReportHandler
+import sample.context.DomainHelper
 
 /**
  * アプリケーションにおけるBean定義を表現します。
@@ -25,6 +32,24 @@ import sample.model.BusinessDayHandler
 class ApplicationConfig {
   @Bean
   def timestamper(): Timestamper = Timestamper()
+  @Bean
+  def actorSession(): ActorSession = new ActorSession()
+  @Bean
+  def resourceBundleHandler(): ResourceBundleHandler = new ResourceBundleHandler();
+  @Bean
+  def appSettingHandler(): AppSettingHandler = new AppSettingHandler();
+  @Bean
+  def auditHandler(): AuditHandler = new AuditHandler();
+  @Bean
+  def auditPersister(): AuditPersister = new AuditPersister();
+  @Bean
+  def idLockHandler(): IdLockHandler = new IdLockHandler();
+  @Bean
+  def mailHandler(): MailHandler = new MailHandler();
+  @Bean
+  def reportHandler(): ReportHandler = new ReportHandler();
+  @Bean
+  def domainHelper(): DomainHelper = new DomainHelper();
 }
 
 @Configuration

@@ -1,8 +1,5 @@
 package sample.context.orm
 
-import org.springframework.context.annotation.Primary
-import org.springframework.stereotype.Component
-
 import javax.annotation.{PreDestroy, PostConstruct}
 import scalikejdbc.{LoggingSQLAndTimeSettings, GlobalSettings}
 import skinny.DBSettings
@@ -10,8 +7,6 @@ import skinny.DBSettings
 /**
  * SkinnyのORM初期定義を行います。
  */
-@Primary
-@Component
 class SkinnyOrm {
 
   @PostConstruct
