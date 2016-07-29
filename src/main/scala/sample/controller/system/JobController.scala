@@ -23,17 +23,17 @@ class JobController extends ControllerSupport {
   private var system: SystemAdminService = _
 
   /** 営業日を進めます。 */
-  @RequestMapping(value = Array("/daily/processDay"), method = Array(RequestMethod.POST))
+  @PostMapping(Array("/daily/processDay"))
   def processDay(): ResponseEntity[Void] =
     resultEmpty(system.processDay())
   
   /** 振込出金依頼を締めます。 */
-  @RequestMapping(value = Array("/daily/closingCashOut"),  method = Array(RequestMethod.POST))
+  @PostMapping(Array("/daily/closingCashOut"))
   def closingCashOut(): ResponseEntity[Void] =
     resultEmpty(asset.closingCashOut())
 
   /** キャッシュフローを実現します。 */
-  @RequestMapping(value = Array("/daily/realizeCashflow"),  method = Array(RequestMethod.POST))
+  @PostMapping(Array("/daily/realizeCashflow"))
   def realizeCashflow(): ResponseEntity[Void] =
     resultEmpty(asset.realizeCashflow())
 

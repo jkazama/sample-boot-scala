@@ -1,0 +1,8 @@
+---
+spring:
+  profiles: testweb
+
+logging.config: classpath:logback-spring.xml
+
+extension:
+  security.auth.enabled: false

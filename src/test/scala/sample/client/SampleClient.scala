@@ -66,7 +66,7 @@ class SimpleTestAgent {
   }
   def dump(res: ClientHttpResponse): ClientHttpResponse = {
     println(s"status: ${res.getRawStatusCode()}, text: ${res.getStatusText()}")
-    Try(println(IOUtils.toString(res.getBody()))) match {
+    Try(println(IOUtils.toString(res.getBody(), "UTF-8"))) match {
       case Success(v) => // nothing.
       case Failure(e) => println(e.getMessage)
     }

@@ -35,7 +35,6 @@ UI 層の公開処理は RESTfulAPI での API 提供のみをおこないます
 Spring Boot は様々な利用方法が可能ですが、本サンプルでは以下のポリシーで利用します。
 
 - 設定ファイルは yml を用いる。 Bean 定義に xml 等の拡張ファイルは用いない。
-- ライブラリ化しないので @Bean による将来拡張性を考慮せずにクラス単位で Bean ベタ登録。
 - 例外処理は終端 ( RestErrorAdvice / RestErrorCotroller ) で定義。 whitelabel 機能は無効化。
 - ORM 実装として SkinnyORM を利用。
 - Spring Security の認証方式はベーシック認証でなく、昔からよくある HttpSession で。
@@ -199,14 +198,13 @@ Spring Boot では Executable Jar ( ライブラリなども内包する実行�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
+| `spring-boot-starter-*` | 1.4.0    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
 | `scala-compiler/library`| 2.11.8   | Scala コンパイラ/基本ライブラリ |
-| `skinny-orm`            | 2.1.0    | Scala ベースの ORM ライブラリ |
-| `scalikejdbc-jsr310`    | 2.4.0    | Skinny ORM の JSR310 対応 |
-| `ehcache-core`          | 2.6.+    | 最新の EhCache 設定記法を利用するため |
-| `jackson-datatype-jsr310`| 2.6.+   | JSON 変換時の JSR310 対応 |
+| `skinny-orm`            | 2.2.0    | Scala ベースの ORM ライブラリ |
+| `scalikejdbc-jsr310`    | 2.4.2    | Skinny ORM の JSR310 対応 |
+| `ehcache`               | 3.1.+    | JCache 実装 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 54.1.+   | 文字変換ライブラリ |
+| `icu4j-*`               | 57.1   | 文字変換ライブラリ |
 
 *※実際の詳細な定義は `build.gradle` を参照してください*
 

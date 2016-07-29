@@ -21,11 +21,11 @@ class AccountController extends ControllerSupport {
   private var securityProps: SecurityProperties = _
   
   /** ログイン状態を確認します。 */
-  @RequestMapping(value = Array("/loginStatus"))
+  @GetMapping(Array("/loginStatus"))
   def loginStatus: Boolean = true
   
   /** 口座ログイン情報を取得します。 */
-  @RequestMapping(value = Array("/loginAccount"))
+  @GetMapping(Array("/loginAccount"))
   def loadLoginAccount: LoginAccount =
     if (securityProps.auth.enabled) {
       SecurityActorFinder.actorDetails.map(details =>

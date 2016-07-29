@@ -1,7 +1,6 @@
 package sample.context.lock
 
 import java.util.concurrent.locks.ReentrantReadWriteLock
-import org.springframework.stereotype.Component
 import com.fasterxml.jackson.annotation.JsonValue
 import sample.InvocationException
 import sample.context._
@@ -12,7 +11,6 @@ import sample.ErrorKeys
  * low: ここではシンプルに口座単位のIDロックのみをターゲットにします。
  * low: 通常はDBのロックテーブルに"for update"要求で悲観的ロックをとったりしますが、サンプルなのでメモリロックにしてます。
  */
-@Component
 class IdLockHandler {
   val lockMap: scala.collection.mutable.Map[String, ReentrantReadWriteLock] =
     scala.collection.mutable.Map()

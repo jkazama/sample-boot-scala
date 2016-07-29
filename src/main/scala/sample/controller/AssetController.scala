@@ -26,7 +26,7 @@ class AssetController extends ControllerSupport {
   private var service: AssetService = _
   
   /** 未処理の振込依頼情報を検索します。 */
-  @RequestMapping(value = Array("/cio/unprocessedOut/"))
+  @GetMapping(value = Array("/cio/unprocessedOut/"))
   def findUnprocessedCashOut: Seq[CashOutUI] =
     service.findUnprocessedCashOut.map(CashOutUI(_))
 
@@ -35,7 +35,7 @@ class AssetController extends ControllerSupport {
    * low: RestControllerの標準の振る舞いとしてvoidやプリミティブ型はJSON化されないので注意してください。
    * (解析時の優先順位の関係だと思いますが)
    */
-  @RequestMapping(value = Array("/cio/withdraw"), method = Array(RequestMethod.POST))
+  @PostMapping(Array("/cio/withdraw"))
   def withdraw(@Valid p: RegCashOutParam): ResponseEntity[Long] =
     result(service.withdraw(p.convert))
 
