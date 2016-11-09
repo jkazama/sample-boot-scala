@@ -1,11 +1,8 @@
-package sample.context.rest
+package sample.context.security
 
 import java.io.IOException
-
 import java.util.Locale
-
 import scala.collection.JavaConverters._
-
 import org.slf4j.{LoggerFactory, Logger}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context._
@@ -15,7 +12,6 @@ import org.springframework.validation._
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.bind.ServletRequestBindingException
 import org.springframework.web.bind.annotation.{ExceptionHandler, ControllerAdvice, RestController}
-
 import javax.validation.ConstraintViolationException
 import sample._
 import sample.context.actor.ActorSession
@@ -38,7 +34,7 @@ class RestErrorAdvice {
     handleException(e, ErrorHolder(msg, locale, "error.ServletRequestBinding"))
   private def locale: Locale = session.actor.locale
   private def handleException(e: Exception, holder: ErrorHolder, status: HttpStatus = HttpStatus.BAD_REQUEST): ResponseEntity[Map[String, Array[String]]] = {
-    log.warn(e.getMessage())
+    log.warn(Option(e.getMessage()).getOrElse(e.getClass().getSimpleName()))
     holder.result(HttpStatus.BAD_REQUEST)
   }
   

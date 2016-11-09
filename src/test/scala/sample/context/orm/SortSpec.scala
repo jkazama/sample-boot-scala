@@ -6,7 +6,7 @@ import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class SortSpec extends WordSpec with ShouldMatchers {
+class SortSpec extends WordSpec with Matchers {
  
   "ソート検証" should {
     "初期化" in {

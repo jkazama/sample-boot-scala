@@ -3,11 +3,12 @@ package sample.util
 import scala.math.BigDecimal.RoundingMode
 
 import org.junit.runner.RunWith
-import org.scalatest.{WordSpec, ShouldMatchers}
+import org.scalatest.{WordSpec}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.Matchers
 
 @RunWith(classOf[JUnitRunner])
-class CalculatorSpec extends WordSpec with ShouldMatchers {
+class CalculatorSpec extends WordSpec with Matchers {
 
   "計算ユーティリティ検証" should {
     "四則演算" in {

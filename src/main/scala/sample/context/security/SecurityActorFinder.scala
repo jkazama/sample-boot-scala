@@ -2,7 +2,7 @@ package sample.context.security
 
 import java.util.Collection
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
@@ -33,8 +33,8 @@ class SecurityActorFinder {
         throw new IllegalStateException("SecurityAdminServiceをコンテナへBean登録してください。"))
     else userService  
 }
-object SecurityActorFinder {
-  
+
+object SecurityActorFinder { 
   /**
    * 現在有効な認証情報を返します。
    */
@@ -49,7 +49,6 @@ object SecurityActorFinder {
     authentication
       .filter(_.getDetails().isInstanceOf[ActorDetails])
       .map(_.getDetails().asInstanceOf[ActorDetails])
-
 }
 
 /**
@@ -76,7 +75,7 @@ case class ActorDetails(
   override def isAccountNonLocked(): Boolean = return true
   override def isCredentialsNonExpired(): Boolean = return true
   override def isEnabled(): Boolean = return true
-  override def getAuthorities(): Collection[GrantedAuthority] = authorities
+  override def getAuthorities(): Collection[GrantedAuthority] = authorities.asJavaCollection
   def authorityIds: Seq[String] = authorities.map(_.getAuthority)
 }
 

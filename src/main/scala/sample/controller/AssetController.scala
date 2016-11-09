@@ -2,7 +2,6 @@ package sample.controller
 
 import java.time._
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +13,7 @@ import sample.ActionStatusType
 import sample.model.asset._
 import sample.model.constraints._
 import sample.usecase.AssetService
+import java.beans.SimpleBeanInfo
 
 /**
  * 資産に関わる顧客のUI要求を処理します。
@@ -59,7 +59,7 @@ object CashOutUI {
  * ※本来BeanPropertyの付与は必要ありませんが、Spring Boot 1.3.RELEASE時点で適切なバインドが
  * されない事が確認されたため明示的に付与しています。
  */
-@BeanInfo
+@SimpleBeanInfo
 class RegCashOutParam {
   @Currency
   @BeanProperty

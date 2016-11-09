@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE'
     }
 }
 
 apply plugin: 'scala'
-apply plugin: 'spring-boot'
+apply plugin: "org.springframework.boot"
 
-version = '0.3.2'
+version = '0.4.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -33,29 +33,29 @@ repositories {
 }
 
 dependencies {
-    compile 'org.scala-lang:scala-compiler:2.11.8'
-    compile 'org.scala-lang:scala-library:2.11.8'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+'
-    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.8.+'
-    compile 'org.scalikejdbc:scalikejdbc-jsr310_2.11:2.4.2'
-    compile 'org.skinny-framework:skinny-orm_2.11:2.2.0'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-starter-aop'
-    compile 'org.springframework.boot:spring-boot-starter-cache'
-    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile "org.scala-lang:scala-compiler:2.12.0"
+    compile "org.scala-lang:scala-library:2.12.0"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
+    compile "com.fasterxml.jackson.module:jackson-module-scala_2.12.0-RC1:2.8.+"
+    compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.0-RC2"
+    compile "org.skinny-framework:skinny-orm_2.12:2.3.0-M1"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-starter-cache"
+    compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.ehcache:ehcache:3.1.+"
     compile "javax.cache:cache-api:1.0.0"
     compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-lang3:3.4"
-    compile "com.ibm.icu:icu4j:57.1"
-    compile fileTree(dir: 'libs', includes: ['*.jar'])
-    runtime 'com.h2database:h2:1.4.+'
-    testCompile 'org.scalikejdbc:scalikejdbc-test_2.11:2.3.5'
-    testCompile 'org.scalatest:scalatest_2.11:2.2.+'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    compile "org.apache.commons:commons-lang3:3.5"
+    compile "com.ibm.icu:icu4j:58.1"
+    compile fileTree(dir: "libs", includes: ["*.jar"])
+    runtime "com.h2database:h2:1.4.+"
+    testCompile "org.scalikejdbc:scalikejdbc-test_2.12:2.5.0-RC2"
+    testCompile "org.scalatest:scalatest_2.12:3.0.+"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
+    gradleVersion = '3.1'
 }

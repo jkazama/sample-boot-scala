@@ -1,14 +1,14 @@
 package sample.context.security
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
 
 import org.springframework.boot.context.properties._
+import java.beans.SimpleBeanInfo
 
 
 
 /** セキュリティ関連の設定情報を表現します。 */
-@BeanInfo
+@SimpleBeanInfo
 @ConfigurationProperties(prefix = "extension.security")
 class SecurityProperties {
   /** Spring Security依存の認証/認可設定情報 */
@@ -20,7 +20,7 @@ class SecurityProperties {
 }
 
 /** Spring Securityに対する拡張設定情報。(ScurityConfig#SecurityPropertiesによって管理されています) */
-@BeanInfo
+@SimpleBeanInfo
 class SecurityAuthProperties {
   /** リクエスト時のログインIDを取得するキー */
   @BeanProperty
@@ -65,7 +65,7 @@ class SecurityAuthProperties {
 }
 
 /** CORS設定情報を表現します。 */
-@BeanInfo
+@SimpleBeanInfo
 class SecurityCorsProperties {
   @BeanProperty
   var allowCredentials = true

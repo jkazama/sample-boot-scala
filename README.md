@@ -100,6 +100,7 @@ main
 開発 IDE である [IntelliJ IDEA](https://www.jetbrains.com/idea/) で本サンプルを利用するには、事前に以下の手順を行っておく必要があります。
 
 - JDK8 以上のインストール
+- Scala 2.12 以上のインストール
 - IntelliJ IDEA のインストール
 - Scala プラグインのインストール
 
@@ -122,11 +123,13 @@ main
 開発 IDE である [Eclipse](https://eclipse.org/) で本サンプルを利用するには、事前に以下の手順を行っておく必要があります。
 
 - JDK8 以上のインストール
+- Scala 2.12 以上のインストール
 - Eclipse ( Juno 以降 ) のインストール
 - Gradle Plugin [ Buildship ] のインストール
     - Eclipse Mars 以降は Buildship 版が入っているので不要です
 - Scala IDE のインストール
     - ダウンロードに失敗する時はローカルに updatesite のファイルをダウンロードして更新してください。
+    - Scala IDE の選択条件に 2.12 を追加するには [BYOS](http://scala-ide.org/blog/scala-installations.html#BYOS) を参考にしてください。
 
 次の手順で本サンプルをプロジェクト化してください。  
 
@@ -198,13 +201,13 @@ Spring Boot では Executable Jar ( ライブラリなども内包する実行�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-boot-starter-*` | 1.4.0    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
-| `scala-compiler/library`| 2.11.8   | Scala コンパイラ/基本ライブラリ |
-| `skinny-orm`            | 2.2.0    | Scala ベースの ORM ライブラリ |
-| `scalikejdbc-jsr310`    | 2.4.2    | Skinny ORM の JSR310 対応 |
+| `spring-boot-starter-*` | 1.4.2    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
+| `scala-compiler/library`| 2.12.0   | Scala コンパイラ/基本ライブラリ |
+| `skinny-orm`            | 2.3.0-M1 | Scala ベースの ORM ライブラリ |
+| `scalikejdbc-jsr310`    | 2.5.0-RC2 | Skinny ORM の JSR310 対応 |
 | `ehcache`               | 3.1.+    | JCache 実装 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 57.1   | 文字変換ライブラリ |
+| `icu4j-*`               | 58.1   | 文字変換ライブラリ |
 
 *※実際の詳細な定義は `build.gradle` を参照してください*
 

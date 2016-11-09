@@ -2,7 +2,6 @@ package sample.controller.admin
 
 import java.time.LocalDate
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +18,7 @@ import sample.context.orm.PagingList
 import sample.controller._
 import sample.model.constraints._
 import sample.usecase.SystemAdminService
+import java.beans.SimpleBeanInfo
 
 /**
  * システムに関わる社内のUI要求を処理します。
@@ -52,7 +52,7 @@ class SystemAdminController extends ControllerSupport {
 }
 
 /** FindAuditActorのUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class FindAuditActorParam {
   @IdStrEmpty
   @BeanProperty
@@ -85,7 +85,7 @@ class FindAuditActorParam {
 }
 
 /** FindAuditEventのUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class FindAuditEventParam {
   @CategoryEmpty
   @BeanProperty
@@ -111,7 +111,7 @@ class FindAuditEventParam {
 }
 
 /** FindAppSettingのUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class FindAppSettingParam {
   @DescriptionEmpty
   @BeanProperty
