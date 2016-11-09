@@ -14,7 +14,7 @@ import sample.model._
 import scalikejdbc._
 import scalikejdbc.scalatest.AutoRollback
 
-abstract class UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter with ShouldMatchers {
+abstract class UnitSpecSupport extends FlatSpec with AutoRollback with BeforeAndAfter with Matchers {
 
   val clock: Clock = Clock.systemDefaultZone()
   

@@ -3,9 +3,8 @@ package sample.controller
 import java.net.URLEncoder
 import java.util.Locale
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.util.{ Try, Success, Failure }
 
 import org.apache.commons.io._
@@ -21,6 +20,7 @@ import sample.context._
 import sample.context.actor.ActorSession
 import sample.context.orm._
 import sample.context.report.ReportFile
+import java.beans.SimpleBeanInfo
 
 /** UIコントローラの基底クラス。 */
 class ControllerSupport {
@@ -50,7 +50,7 @@ class ControllerSupport {
    */
   protected def result[T](command: => T): ResponseEntity[T] = resultObject(command)
   protected def resultObject[T](t: T): ResponseEntity[T] = ResponseEntity.status(HttpStatus.OK).body(t)
-  protected def resultMap[T](key: String, t: T): ResponseEntity[java.util.Map[String, T]] = resultObject(Map(key -> t))
+  protected def resultMap[T](key: String, t: T): ResponseEntity[java.util.Map[String, T]] = resultObject(Map(key -> t).asJava)
   protected def resultMap[T](t: T): ResponseEntity[java.util.Map[String, T]] = resultMap("result", t)
   protected def resultEmpty(command: => Unit = () => ()): ResponseEntity[Void] = {
     command
@@ -92,7 +92,7 @@ class ControllerSupport {
 }
 
 /** ページング系のUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class PaginationParam {
   @BeanProperty
   var page: Int = 1
@@ -106,13 +106,13 @@ class PaginationParam {
   var sort: SortParam = new SortParam()
   def convert: Pagination = Pagination(page, size, Option(total), ignoreTotal, Option(sort).map(_.convert))
 }
-@BeanInfo
+@SimpleBeanInfo
 class SortParam {
   @BeanProperty
   var orders: Array[SortOrderParam] = Array()
   def convert: Sort = Sort(if (orders != null) orders.map(_.convert) else Seq())
 }
-@BeanInfo
+@SimpleBeanInfo
 class SortOrderParam {
   @BeanProperty
   var property: String = _

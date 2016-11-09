@@ -2,7 +2,6 @@ package sample.controller.admin
 
 import java.time.LocalDate
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +14,7 @@ import sample.controller.ControllerSupport
 import sample.model.asset._
 import sample.model.constraints._
 import sample.usecase.AssetAdminService
+import java.beans.SimpleBeanInfo
 
 /**
  * 資産に関わる社内のUI要求を処理します。
@@ -33,7 +33,7 @@ class AssetAdminController extends ControllerSupport {
 }
 
 /** FindCashInOutのUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class FindCashInOutParam {
   @CurrencyEmpty
   @BeanProperty

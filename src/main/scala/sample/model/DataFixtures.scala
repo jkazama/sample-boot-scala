@@ -1,7 +1,6 @@
 package sample.model
 
 import java.time._
-import scala.beans.BeanInfo
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure._
@@ -17,6 +16,7 @@ import sample.model.asset._
 import sample.model.master._
 import sample.util._
 import scalikejdbc._
+import java.beans.SimpleBeanInfo
 
 /**
  * データ生成用のサポートコンポーネント。
@@ -26,7 +26,7 @@ import scalikejdbc._
 @Component
 @ConditionalOnProperty(prefix = "extension.datafixture", name = Array("enabled"), matchIfMissing = false)
 @DependsOn(Array("skinnyOrm"))
-@BeanInfo
+@SimpleBeanInfo
 class DataFixtures {
   @Autowired
   var encoder: PasswordEncoder = _

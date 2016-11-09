@@ -4,7 +4,7 @@ import java.util.Locale
 import java.util.ResourceBundle
 
 import scala.beans.BeanProperty
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.support.ResourceBundleMessageSource
@@ -40,7 +40,7 @@ class ResourceBundleHandler {
     labels(basename, Locale.getDefault)
   def labels(basename: String, locale: Locale): Map[String, String] = {
     val bundle = get(basename)
-    bundle.keySet().map(key => (key, bundle.getString(key))).toMap
+    bundle.keySet().asScala.map(key => (key, bundle.getString(key))).toMap
   }
     
 

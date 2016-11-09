@@ -36,7 +36,7 @@ class SampleClient {
   def 社内向けユースケース検証: Unit = {
     val day = DateUtils.dayFormat(TimePoint().day)
     val agent = new SimpleTestAgent()
-    agent.login("sample", "sample")
+    agent.login("admin", "admin")
     agent.get("振込入出金依頼検索", s"/admin/asset/cio/?updFromDay=${day}&updToDay=${day}")
   }
   

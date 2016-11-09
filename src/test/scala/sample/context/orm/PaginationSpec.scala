@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 import sample.context.orm.SortOrder._
 
 @RunWith(classOf[JUnitRunner])
-class PaginationSpec extends WordSpec with ShouldMatchers {
+class PaginationSpec extends WordSpec with Matchers {
  
   "ページング検証" should {
     "初期化" in {

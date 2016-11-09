@@ -2,14 +2,14 @@ package sample.util
 
 import org.junit.runner.RunWith
 
-import org.scalatest.ShouldMatchers
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 
 import ConvertUtils._
+import org.scalatest.Matchers
 
 @RunWith(classOf[JUnitRunner])
-class ConvertUtilsSpec extends WordSpec with ShouldMatchers {
+class ConvertUtilsSpec extends WordSpec with Matchers {
   
   "変換ユーティリティ検証" should {
     "例外無視変換" in {

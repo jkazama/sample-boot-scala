@@ -1,10 +1,10 @@
-package sample.context.rest
+package sample.controller
 
 import org.springframework.boot.autoconfigure.web._
 import org.springframework.web.bind.annotation._
 import org.springframework.web.context.request.ServletRequestAttributes
-
 import javax.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * REST用の例外ハンドリングを行うController。
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest
  */
 @RestController
 class RestErrorController extends ErrorController {
+  @Autowired
   var errorAttributes: ErrorAttributes = _
   override def getErrorPath() = "/api/error"
   

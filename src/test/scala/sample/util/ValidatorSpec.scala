@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 import sample.ValidationException
 
 @RunWith(classOf[JUnitRunner])
-class ValidatorSpec extends WordSpec with ShouldMatchers {
+class ValidatorSpec extends WordSpec with Matchers {
   
   "審査ユーティリティ検証" should {
     "単純ケース" in {

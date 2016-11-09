@@ -2,22 +2,15 @@ package sample.context.security
 
 import java.util.Locale
 
-import scala.beans.BeanInfo
-import scala.beans.BeanProperty
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition._
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation._
-import org.springframework.core.annotation.Order
 import org.springframework.http.MediaType
 import org.springframework.security.authentication._
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders._
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core._
@@ -25,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication._
 import org.springframework.security.web.authentication.logout._
-import org.springframework.stereotype.Component
 import org.springframework.web.filter._
 
 import javax.servlet._
@@ -53,9 +45,6 @@ class SecurityConfigurer extends WebSecurityConfigurerAdapter {
   /** 認証/認可利用者サービス */
   @Autowired
   var actorFinder: SecurityActorFinder = _ 
-  /** カスタム認証プロバイダ */
-  @Autowired
-  var securityProvider: SecurityProvider = _
   /** カスタムエントリポイント(例外対応) */
   @Autowired
   var entryPoint: SecurityEntryPoint = _
@@ -71,26 +60,20 @@ class SecurityConfigurer extends WebSecurityConfigurerAdapter {
   /** 認証配下に置くServletFilter */
   @Autowired(required = false)
   var filters: SecurityFilters = _
-  
-  override def configure(auth: AuthenticationManagerBuilder) =
-    auth.eraseCredentials(true).authenticationProvider(securityProvider)
 
-  override def authenticationManagerBean(): AuthenticationManager =
-    super.authenticationManagerBean()
-  
   override def configure(web: WebSecurity) =
-    web.ignoring().antMatchers(serverProps.getPathsArray(props.auth.ignorePath): _*)
+    web.ignoring().mvcMatchers(serverProps.getPathsArray(props.auth.ignorePath): _*)
   
   override def configure(http: HttpSecurity) {
     // Target URL
     http
       .authorizeRequests()
-      .antMatchers(props.auth.excludesPath: _*).permitAll()
+      .mvcMatchers(props.auth.excludesPath: _*).permitAll()
     http
       .csrf().disable()
       .authorizeRequests()
-        .antMatchers(props.auth.pathAdmin: _*).hasRole("ADMIN")
-        .antMatchers(props.auth.path: _*).hasRole("USER")
+        .mvcMatchers(props.auth.pathAdmin: _*).hasRole("ADMIN")
+        .mvcMatchers(props.auth.path: _*).hasRole("USER")
     // common
     http
       .exceptionHandling().authenticationEntryPoint(entryPoint)
@@ -130,13 +113,11 @@ class SecurityProvider extends AuthenticationProvider {
   @Lazy
   private var encoder: PasswordEncoder = _
   override def authenticate(authentication: Authentication):Authentication = {
-    if (authentication.getPrincipal() == null ||
-        authentication.getCredentials() == null) {
+    if (authentication.getPrincipal() == null || authentication.getCredentials() == null) {
         throw new BadCredentialsException("ログイン認証に失敗しました");
     }
     val service = actorFinder.detailsService
-    val details =
-        service.loadUserByUsername(authentication.getPrincipal().toString())
+    val details = service.loadUserByUsername(authentication.getPrincipal().toString())
     val presentedPassword = authentication.getCredentials().toString()
     if (!encoder.matches(presentedPassword, details.getPassword())) {
       throw new BadCredentialsException("ログイン認証に失敗しました");
@@ -158,12 +139,16 @@ class SecurityEntryPoint extends AuthenticationEntryPoint {
   @Autowired
   var msg: MessageSource = _
   override def commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
+    if (response.isCommitted()) return
     val message =
       if (authException.isInstanceOf[InsufficientAuthenticationException])
         msg.getMessage(ErrorKeys.AccessDenied, Array(), Locale.getDefault())
       else
         msg.getMessage(ErrorKeys.Authentication, Array(), Locale.getDefault())
-    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE)
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+    response.setCharacterEncoding("UTF-8")
+    response.getWriter().write("{\"message\": \"" + message + "\"}");
   }
 }
   

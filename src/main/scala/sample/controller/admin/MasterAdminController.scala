@@ -2,7 +2,6 @@ package sample.controller.admin
 
 import java.time.LocalDate
 
-import scala.beans.BeanInfo
 import scala.beans.BeanProperty
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +15,7 @@ import sample.controller.ControllerSupport
 import sample.model.constraints._
 import sample.model.master._
 import sample.usecase.MasterAdminService
+import java.beans.SimpleBeanInfo
 
 /**
  * マスタに関わる社内のUI要求を処理します。
@@ -52,7 +52,7 @@ class MasterAdminController extends ControllerSupport {
 case class LoginStaff(id: String, name: String, authorities: Seq[String])
 
 /** RegHolidayのUI変換パラメタ */
-@BeanInfo
+@SimpleBeanInfo
 class RegHolidayParam {
   @CategoryEmpty
   @BeanProperty
@@ -65,7 +65,7 @@ class RegHolidayParam {
   var list: Seq[RegHolidayItemParam] = _
   def convert: RegHoliday = RegHoliday(Option(category), year, list.map(_.convert))
 }
-@BeanInfo
+@SimpleBeanInfo
 class RegHolidayItemParam {
   @ISODate
   @BeanProperty
