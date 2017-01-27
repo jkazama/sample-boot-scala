@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.4.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.4.1'
+version = '0.4.2'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -34,8 +34,8 @@ repositories {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-compiler:2.12.0"
-    compile "org.scala-lang:scala-library:2.12.0"
+    compile "org.scala-lang:scala-compiler:2.12.1"
+    compile "org.scala-lang:scala-library:2.12.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:2.8.+"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.0"
@@ -58,5 +58,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2.1'
+    gradleVersion = '3.3'
 }
