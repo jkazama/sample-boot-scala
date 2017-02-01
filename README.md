@@ -201,7 +201,7 @@ Spring Boot では Executable Jar ( ライブラリなども内包する実行�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-boot-starter-*` | 1.4.3    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
+| `spring-boot-starter-*` | 1.5.+    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
 | `scala-compiler/library`| 2.12.0   | Scala コンパイラ/基本ライブラリ |
 | `skinny-orm`            | 2.3.3    | Scala ベースの ORM ライブラリ |
 | `scalikejdbc-jsr310`    | 2.5.0    | Skinny ORM の JSR310 対応 |
