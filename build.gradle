@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.0'
+version = '0.5.1'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -39,7 +39,7 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:2.8.+"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.0"
-    compile "org.skinny-framework:skinny-orm_2.12:2.3.3"
+    compile "org.skinny-framework:skinny-orm_2.12:2.3.5"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-aop"
@@ -58,5 +58,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '3.4.1'
 }
