@@ -53,19 +53,14 @@ class ApplicationConfig {
 }
 
 @Configuration
-class WebMvcConfig extends WebMvcConfigurerAdapter {
-  @Autowired
-  private var message: MessageSource = _
+class WebMVCConfig {
+
   /** BeanValidationメッセージのUTF-8に対応したValidator。 */
   @Bean
-  def validator(): LocalValidatorFactoryBean = {
+  def mvcValidator(message: MessageSource): LocalValidatorFactoryBean = {
     val factory = new LocalValidatorFactoryBean()
     factory.setValidationMessageSource(message)
     factory
-  }
-  /** 標準Validatorの差し替えをします。 */
-  override def getValidator(): org.springframework.validation.Validator = {
-    validator()
   }
 
   /** Scalaの型に対応したObjectMapper */
