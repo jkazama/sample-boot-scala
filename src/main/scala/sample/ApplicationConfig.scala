@@ -57,7 +57,7 @@ class WebMVCConfig {
 
   /** BeanValidationメッセージのUTF-8に対応したValidator。 */
   @Bean
-  def mvcValidator(message: MessageSource): LocalValidatorFactoryBean = {
+  def defaultValidator(message: MessageSource): LocalValidatorFactoryBean = {
     val factory = new LocalValidatorFactoryBean()
     factory.setValidationMessageSource(message)
     factory
