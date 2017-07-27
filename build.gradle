@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.4.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.5.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.3'
+version = '0.5.4'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -39,7 +39,7 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:2.8.+"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.2"
-    compile "org.skinny-framework:skinny-orm_2.12:2.3.7"
+    compile "org.skinny-framework:skinny-orm_2.12:2.3.8"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-aop"
@@ -48,7 +48,7 @@ dependencies {
     compile "org.ehcache:ehcache:3.2.+"
     compile "javax.cache:cache-api:1.0.0"
     compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-lang3:3.5"
+    compile "org.apache.commons:commons-lang3:3.6"
     compile "com.ibm.icu:icu4j:59.1"
     compile fileTree(dir: "libs", includes: ["*.jar"])
     runtime "com.h2database:h2:1.4.+"
@@ -58,5 +58,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.0.2'
 }
