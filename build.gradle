@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.7'
+version = '0.5.8'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -34,8 +34,8 @@ repositories {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-compiler:2.12.3"
-    compile "org.scala-lang:scala-library:2.12.3"
+    compile "org.scala-lang:scala-compiler:2.12.4"
+    compile "org.scala-lang:scala-library:2.12.4"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.+"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:2.9.+"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.2"
@@ -47,9 +47,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.ehcache:ehcache:3.3.+"
     compile "javax.cache:cache-api:1.0.0"
-    compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-lang3:3.6"
-    compile "com.ibm.icu:icu4j:59.1"
+    compile "commons-io:commons-io:2.6"
+    compile "org.apache.commons:commons-lang3:3.7"
+    compile "com.ibm.icu:icu4j:60.1"
     compile fileTree(dir: "libs", includes: ["*.jar"])
     runtime "com.h2database:h2:1.4.+"
     testCompile "org.scalikejdbc:scalikejdbc-test_2.12:2.5.2"
@@ -58,5 +58,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
+    gradleVersion = '4.3.1'
 }
