@@ -3,14 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.8'
+version = '0.5.9'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -50,7 +50,7 @@ dependencies {
     compile "javax.cache:cache-api:1.0.0"
     compile "commons-io:commons-io:2.6"
     compile "org.apache.commons:commons-lang3:3.7"
-    compile "com.ibm.icu:icu4j:60.1"
+    compile "com.ibm.icu:icu4j:60.2"
     compile fileTree(dir: "libs", includes: ["*.jar"])
     runtime "com.h2database:h2:1.4.+"
     testCompile "org.scalikejdbc:scalikejdbc-test_2.12:2.5.2"
@@ -59,5 +59,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.5'
 }
