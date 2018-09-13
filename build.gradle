@@ -1,16 +1,20 @@
 buildscript {
+    ext {
+        jacksonVersion = '2.9.6'
+    }
+    ext['jackson.version'] = jacksonVersion
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.14.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.16.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.13'
+version = '0.5.14'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -36,9 +40,9 @@ repositories {
 dependencies {
     compile "org.scala-lang:scala-compiler:2.12.6"
     compile "org.scala-lang:scala-library:2.12.6"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.+"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.+"
-    compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:2.9.+"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:${jacksonVersion}"
     compile "org.scalikejdbc:scalikejdbc-jsr310_2.12:2.5.2"
     compile "org.skinny-framework:skinny-orm_2.12:2.3.9"
     compile "org.springframework.boot:spring-boot-starter-actuator"
@@ -59,5 +63,5 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '4.8.1'
+    gradleVersion = '4.10'
 }
