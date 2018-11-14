@@ -70,7 +70,7 @@ class AuditHandler {
   def callAudit[T](category: String, message: String, callable: => T): T = {
     var id: Option[Long] = Option.empty
     try {
-      Try(id = Option(persister.startActor(RegAuditActor(category, message)))) match {
+      Try({id = Option(persister.startActor(RegAuditActor(category, message)))}) match {
         case Success(v) => // nothing
         case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
       }
@@ -94,7 +94,7 @@ class AuditHandler {
   def callEvent[T](category: String, message: String, callable: => T): T = {
     var id: Option[Long] = Option.empty
     try {
-      Try(id = Option(persister.startEvent(RegAuditEvent(category, message)))) match {
+      Try({id = Option(persister.startEvent(RegAuditEvent(category, message)))}) match {
         case Success(v) => // nothing
         case Failure(ex) => LoggerSystem.error(ex.getMessage, ex)
       }

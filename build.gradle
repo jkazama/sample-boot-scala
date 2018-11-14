@@ -1,20 +1,20 @@
 buildscript {
     ext {
-        jacksonVersion = '2.9.6'
+        jacksonVersion = '2.9.7'
     }
     ext['jackson.version'] = jacksonVersion
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.16.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.17.RELEASE'
     }
 }
 
 apply plugin: 'scala'
 apply plugin: "org.springframework.boot"
 
-version = '0.5.14'
+version = '0.5.15'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -38,8 +38,8 @@ repositories {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-compiler:2.12.6"
-    compile "org.scala-lang:scala-library:2.12.6"
+    compile "org.scala-lang:scala-compiler:2.12.7"
+    compile "org.scala-lang:scala-library:2.12.7"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
     compile "com.fasterxml.jackson.module:jackson-module-scala_2.12:${jacksonVersion}"
@@ -50,6 +50,10 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework.boot:spring-boot-starter-web"
+    compile "javax.activation:activation:1.1.1"
+    compile "javax.xml.bind:jaxb-api:2.3.0"
+    compile "com.sun.xml.bind:jaxb-core:2.3.0"
+    compile "com.sun.xml.bind:jaxb-impl:2.3.0"
     compile "org.ehcache:ehcache:3.3.+"
     compile "javax.cache:cache-api:1.0.0"
     compile "commons-io:commons-io:2.6"
@@ -63,5 +67,5 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '4.10'
+    gradleVersion = '4.10.2'
 }
