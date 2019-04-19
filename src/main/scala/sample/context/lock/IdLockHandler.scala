@@ -34,23 +34,22 @@ class IdLockHandler {
     
   def writeLock(id: String): Unit =
     Option(id).map(v =>
-      lockMap.synchronized(idLock(v).writeLock().lock()))
+      idLock(v).writeLock().lock())
 
   private def idLock(id: String): ReentrantReadWriteLock =
     lockMap.getOrElseUpdate(id, new ReentrantReadWriteLock())
 
   def readLock(id: String): Unit =
     Option(id).map(v =>
-      lockMap.synchronized(idLock(v).readLock().lock()))
+      idLock(v).readLock().lock())
 
   def unlock(id: String): Unit =
     Option(id).map(v =>
-      lockMap.synchronized(
-        idLock(v) match {
-          case lock if lock.isWriteLockedByCurrentThread() => lock.writeLock().unlock()
-          case lock => lock.readLock().unlock()
-        }
-      ))
+      idLock(v) match {
+        case lock if lock.isWriteLockedByCurrentThread() => lock.writeLock().unlock()
+        case lock => lock.readLock().unlock()
+      }
+    )
 }
 
 /**
